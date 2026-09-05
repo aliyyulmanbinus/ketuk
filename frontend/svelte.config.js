@@ -1,11 +1,13 @@
-import adapter from '@sveltejs/adapter-node';
+import adapter from '@sveltejs/adapter-vercel';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	preprocess: vitePreprocess(),
 	kit: {
-		adapter: adapter(),
+		// Runtime Node biasa di Vercel (bukan Edge) — konsisten dengan
+		// keputusan "production jalan di Node" di docs/ARCHITECTURE.md.
+		adapter: adapter({ runtime: 'nodejs22.x' }),
 	},
 };
 
