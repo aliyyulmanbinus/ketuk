@@ -12,10 +12,6 @@
 		"skipLibCheck": true,
 		"resolveJsonModule": true,
 		"isolatedModules": true,
-		"forceConsistentCasingInFileNames": true,
-		"paths": {
-			"@ketuk/shared": ["./packages/shared/src"],
-			"@ketuk/shared/*": ["./packages/shared/src/*"]
-		}
+		"forceConsistentCasingInFileNames": true
 	}
 }

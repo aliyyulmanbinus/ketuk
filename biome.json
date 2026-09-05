@@ -13,7 +13,8 @@
 			"!**/build",
 			"!**/dist",
 			"!**/.output",
-			"!**/node_modules"
+			"!**/node_modules",
+			"!**/migrations"
 		]
 	},
 	"formatter": {
