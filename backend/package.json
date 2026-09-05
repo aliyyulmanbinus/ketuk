@@ -1,0 +1,16 @@
+{
+	"name": "backend",
+	"private": true,
+	"type": "module",
+	"version": "0.0.1",
+	"scripts": {
+		"dev": "bun run src/index.ts",
+		"build": "echo \"backend build placeholder\"",
+		"check": "tsc --noEmit"
+	},
+	"dependencies": {},
+	"devDependencies": {
+		"@types/bun": "latest",
+		"typescript": "latest"
+	}
+}

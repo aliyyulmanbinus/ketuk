@@ -1,0 +1,15 @@
+{
+	"name": "frontend",
+	"private": true,
+	"type": "module",
+	"version": "0.0.1",
+	"scripts": {
+		"dev": "echo \"frontend dev placeholder\"",
+		"build": "echo \"frontend build placeholder\"",
+		"check": "tsc --noEmit"
+	},
+	"dependencies": {},
+	"devDependencies": {
+		"typescript": "latest"
+	}
+}
