@@ -1,0 +1,44 @@
+import { error } from '@sveltejs/kit';
+import type { EventWithInvitation } from '$lib/api';
+import { getEvent, listGiftProducts } from '$lib/api';
+import type { PageServerLoad } from './$types';
+
+/**
+ * Tidak ada endpoint publik untuk ambil nama tamu asli dari guestSlug (lihat
+ * catatan di laporan tahap ini) — nama ditebak dengan un-slugify slug-nya.
+ * Cukup untuk sapaan personal di cover, tidak sepenuhnya akurat kalau nama
+ * aslinya punya kapitalisasi/karakter yang hilang saat di-slug-kan.
+ */
+function unslugify(slug: string): string {
+	return slug
+		.split('-')
+		.filter(Boolean)
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+		.join(' ');
+}
+
+export const load: PageServerLoad = async ({ fetch, params, setHeaders }) => {
+	setHeaders({
+		'cache-control': 'public, max-age=60, s-maxage=3600, stale-while-revalidate=86400',
+	});
+
+	let event: EventWithInvitation;
+	try {
+		event = await getEvent(params.slug, { fetch });
+	} catch {
+		throw error(404, 'Undangan tidak ditemukan');
+	}
+
+	if (!event.isPublished) {
+		throw error(404, 'Undangan tidak ditemukan');
+	}
+
+	const giftProducts = await listGiftProducts(undefined, { fetch }).catch(() => []);
+
+	return {
+		event,
+		giftProducts,
+		guestSlug: params.guestSlug,
+		guestName: unslugify(params.guestSlug),
+	};
+};

@@ -1,0 +1,68 @@
+<script lang="ts">
+	import type { Snippet } from 'svelte';
+
+	interface Props {
+		variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
+		size?: 'sm' | 'md' | 'lg';
+		type?: 'button' | 'submit' | 'reset';
+		href?: string;
+		disabled?: boolean;
+		loading?: boolean;
+		fullWidth?: boolean;
+		children: Snippet;
+		onclick?: (event: MouseEvent) => void;
+	}
+
+	let {
+		variant = 'primary',
+		size = 'md',
+		type = 'button',
+		href,
+		disabled = false,
+		loading = false,
+		fullWidth = false,
+		children,
+		onclick,
+	}: Props = $props();
+
+	const sizeClasses: Record<NonNullable<Props['size']>, string> = {
+		sm: 'px-3 py-1.5 text-sm',
+		md: 'px-4 py-2.5 text-sm',
+		lg: 'px-6 py-3 text-base',
+	};
+
+	const variantClasses: Record<NonNullable<Props['variant']>, string> = {
+		primary: 'bg-coral-500 text-white hover:bg-coral-600',
+		secondary: 'bg-navy-900 text-white hover:bg-navy-800',
+		ghost: 'bg-transparent text-navy-900 hover:bg-navy-100',
+		danger: 'bg-red-600 text-white hover:bg-red-700',
+	};
+
+	const classes = $derived(
+		[
+			'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors',
+			'focus-visible:outline-2 disabled:cursor-not-allowed disabled:opacity-50',
+			sizeClasses[size],
+			variantClasses[variant],
+			fullWidth ? 'w-full' : '',
+		].join(' '),
+	);
+
+	const isDisabled = $derived(disabled || loading);
+</script>
+
+{#if href && !isDisabled}
+	<a {href} class={classes}>
+		{@render children()}
+	</a>
+{:else}
+	<button {type} disabled={isDisabled} class={classes} {onclick}>
+		{#if loading}
+			<span
+				class="h-4 w-4 animate-spin rounded-full border-2 border-current/30 border-t-current"
+				aria-hidden="true"
+			></span>
+		{/if}
+		{@render children()}
+	</button>
+{/if}
