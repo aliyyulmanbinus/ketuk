@@ -6,7 +6,6 @@
 		type TemplateItem,
 	} from '$lib/components/domain';
 	import {
-		Sparkles,
 		Check,
 		ArrowRight,
 		Star,
@@ -254,7 +253,7 @@
 </script>
 
 <svelte:head>
-	<title>Ketuk.id — Undangan Pernikahan Digital Eksklusif & RSVP</title>
+	<title>Ketuk.id | Undangan Pernikahan Digital Eksklusif & RSVP</title>
 	<meta
 		name="description"
 		content="Desain undangan pernikahan digital haute-couture dengan RSVP WhatsApp instan, peta Google Maps, amplop digital, dan musik pengiring. Momen indah dimulai dengan undangan berkelas."
@@ -276,9 +275,9 @@
 			<!-- Left Column: Haute-Couture Typography & CTAs -->
 			<div class="text-center lg:col-span-7 lg:text-left">
 				<!-- Eyebrow Tag -->
-				<div class="inline-flex items-center gap-2 rounded-full border border-champagne-300/80 bg-cream-100/90 px-3.5 py-1.5 shadow-2xs backdrop-blur-xs">
-					<Sparkles size={13} class="text-champagne-600" />
-					<span class="text-[11px] font-semibold tracking-[0.2em] uppercase text-espresso-700">
+				<div class="inline-flex items-center gap-2 rounded-full border border-champagne-300/80 bg-cream-100/90 px-4 py-1.5 shadow-2xs backdrop-blur-xs">
+					<span class="h-1.5 w-1.5 rounded-full bg-champagne-600"></span>
+					<span class="text-[10px] sm:text-[11px] font-semibold tracking-[0.25em] uppercase text-espresso-700">
 						Undangan Digital Pernikahan & Acara Eksklusif
 					</span>
 				</div>
@@ -632,7 +631,7 @@
 					</div>
 					<div>
 						<h4 class="font-serif text-sm font-semibold text-espresso-900">Dian & Raditya</h4>
-						<p class="text-[10px] text-espresso-500">Pernikahan di Jakarta — Tema Firenze</p>
+						<p class="text-[10px] text-espresso-500">Jakarta • Tema Firenze</p>
 					</div>
 				</div>
 			</div>
@@ -652,7 +651,7 @@
 					</div>
 					<div>
 						<h4 class="font-serif text-sm font-semibold text-espresso-900">Nadia & Adnan</h4>
-						<p class="text-[10px] text-espresso-500">Pernikahan di Bandung — Tema Capri Rosa</p>
+						<p class="text-[10px] text-espresso-500">Bandung • Tema Capri Rosa</p>
 					</div>
 				</div>
 			</div>
@@ -672,7 +671,7 @@
 					</div>
 					<div>
 						<h4 class="font-serif text-sm font-semibold text-espresso-900">Clarissa & Fajar</h4>
-						<p class="text-[10px] text-espresso-500">Pernikahan di Bali — Tema Tuscan Garden</p>
+						<p class="text-[10px] text-espresso-500">Bali • Tema Tuscan Garden</p>
 					</div>
 				</div>
 			</div>

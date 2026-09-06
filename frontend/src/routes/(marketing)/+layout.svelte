@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Menu, X, ArrowRight, Heart, Sparkles, ShieldCheck, Mail, Phone } from '@lucide/svelte';
+	import { Menu, X, ArrowRight, Heart, ShieldCheck, Mail, Phone } from '@lucide/svelte';
 	import type { Snippet } from 'svelte';
 
 	interface Props {
@@ -22,10 +22,10 @@
 
 <div class="flex min-h-screen flex-col bg-cream-50 text-espresso-900 selection:bg-wine-100 selection:text-wine-900 font-sans">
 	<!-- Top Announcement / Guarantee Bar -->
-	<div class="bg-wine-900 py-2 px-4 text-center text-[11px] font-medium tracking-wider uppercase text-champagne-200">
+	<div class="bg-wine-900 py-2 px-4 text-center text-[10px] sm:text-[11px] font-medium tracking-[0.18em] uppercase text-champagne-200">
 		<span class="inline-flex items-center gap-2">
-			<Sparkles size={12} class="text-champagne-400" />
-			<span>Koleksi Desain 2026 Telah Hadir — Diskon 50% untuk Semua Template Eksklusif</span>
+			<span class="h-1.5 w-1.5 rounded-full bg-champagne-400"></span>
+			<span>Koleksi Desain 2026: Diskon Spesial 50% untuk Seluruh Template Pernikahan</span>
 		</span>
 	</div>
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { X, Check, Sparkles, Music, MapPin, Calendar } from '@lucide/svelte';
+	import { X, Check, Music, MapPin, Calendar } from '@lucide/svelte';
 	import type { TemplateItem } from './TemplateCard.svelte';
 
 	interface Props {
@@ -124,9 +124,8 @@
 					<div class="flex items-center gap-2">
 						{#if template.badge}
 							<span
-								class="inline-flex items-center gap-1 rounded-full bg-wine-100 px-2.5 py-0.5 text-[10px] font-semibold text-wine-800 uppercase"
+								class="inline-block rounded-md bg-wine-900 px-2 py-0.5 text-[9px] font-semibold tracking-[0.15em] text-champagne-200 uppercase"
 							>
-								<Sparkles size={10} />
 								{template.badge}
 							</span>
 						{/if}

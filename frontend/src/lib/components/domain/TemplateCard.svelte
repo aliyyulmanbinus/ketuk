@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ArrowRight, Eye, Sparkles } from '@lucide/svelte';
+	import { ArrowRight, Eye } from '@lucide/svelte';
 
 	export interface TemplateItem {
 		id: string;
@@ -47,9 +47,8 @@
 		{#if template.badge}
 			<div class="absolute top-3 left-3 z-20">
 				<span
-					class="inline-flex items-center gap-1 rounded-full bg-wine-800/90 px-2.5 py-0.5 text-[10px] font-semibold tracking-wider text-white uppercase shadow-xs backdrop-blur-xs"
+					class="inline-block rounded-md bg-wine-900/90 px-2.5 py-1 text-[9px] font-semibold tracking-[0.15em] text-champagne-200 uppercase shadow-xs backdrop-blur-xs border border-champagne-400/20"
 				>
-					<Sparkles size={10} class="text-champagne-300" />
 					{template.badge}
 				</span>
 			</div>

@@ -4,7 +4,7 @@
 		TemplatePreviewModal,
 		type TemplateItem,
 	} from '$lib/components/domain';
-	import { Sparkles, ArrowRight } from '@lucide/svelte';
+	import { ArrowRight } from '@lucide/svelte';
 
 	let activeCategory = $state('Semua');
 	let selectedTemplate = $state<TemplateItem | null>(null);
@@ -218,8 +218,8 @@
 	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 		<!-- Header -->
 		<div class="mx-auto max-w-2xl text-center">
-			<span class="inline-flex items-center gap-1.5 rounded-full border border-champagne-300 bg-cream-100 px-3.5 py-1 text-[11px] font-semibold tracking-widest text-espresso-700 uppercase">
-				<Sparkles size={12} class="text-champagne-600" />
+			<span class="inline-flex items-center gap-2 rounded-full border border-champagne-300 bg-cream-100 px-4 py-1 text-[10px] sm:text-[11px] font-semibold tracking-[0.2em] text-espresso-700 uppercase">
+				<span class="h-1.5 w-1.5 rounded-full bg-champagne-600"></span>
 				Koleksi Eksklusif 2026
 			</span>
 			<h1 class="font-serif mt-4 text-3xl sm:text-5xl font-medium tracking-tight text-espresso-950">
