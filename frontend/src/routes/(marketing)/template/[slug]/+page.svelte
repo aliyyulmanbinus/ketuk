@@ -85,7 +85,7 @@
 		<!-- Main Hero Stage: Left Envelope / Right Product Spec (Matching Screenshot 1) -->
 		<div class="grid gap-10 lg:grid-cols-12 lg:gap-12 items-start">
 			<!-- Left Column: Envelope Presentation & Interactive Demo -->
-			<div class="lg:col-span-6 flex flex-col items-center justify-center">
+			<div class="lg:col-span-6 flex flex-col items-center justify-center w-full">
 				<EnvelopeCard {template} onExpand={() => (isExpandedOpen = true)} interactive={true} />
 			</div>
 

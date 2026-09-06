@@ -1,14 +1,15 @@
 <script lang="ts">
-	import { Maximize2, Volume2, VolumeX, MapPin, Calendar, Check } from '@lucide/svelte';
+	import { Maximize2, Volume2, VolumeX, MapPin, Calendar, Check, X } from '@lucide/svelte';
 	import type { TemplateItem } from '$lib/data/templates';
 
 	interface Props {
 		template: TemplateItem;
 		onExpand?: () => void;
 		interactive?: boolean;
+		isModal?: boolean;
 	}
 
-	let { template, onExpand, interactive = true }: Props = $props();
+	let { template, onExpand, interactive = true, isModal = false }: Props = $props();
 
 	let isOpen = $state(false);
 	let musicPlaying = $state(false);
@@ -25,10 +26,12 @@
 	}
 </script>
 
-<div class="flex flex-col items-center">
+<div class="flex flex-col items-center w-full">
 	<!-- Envelope Outer Card Container -->
 	<div
-		class="relative w-full max-w-[340px] sm:max-w-[380px] md:max-w-[420px] aspect-[9/15.5] rounded-2xl sm:rounded-3xl shadow-[0_20px_50px_-15px_rgba(70,13,23,0.2),0_10px_25px_-5px_rgba(0,0,0,0.08)] border border-champagne-300/60 overflow-hidden select-none transition-all duration-300"
+		class="relative aspect-[9/15.5] shrink-0 rounded-2xl sm:rounded-3xl shadow-[0_20px_50px_-15px_rgba(70,13,23,0.2),0_10px_25px_-5px_rgba(0,0,0,0.08)] border border-champagne-300/60 overflow-hidden select-none transition-all duration-300 {isModal
+			? 'w-[min(100%,360px)] sm:w-[min(100%,420px)] md:w-[460px]'
+			: 'w-[min(100%,320px)] sm:w-[min(100%,380px)] md:w-[400px]'}"
 		style="background: linear-gradient(160deg, #FAF7F2 0%, #F5EFE6 50%, #EDE4D8 100%);"
 	>
 		<!-- Tactile Embossed Floral Texture / Pattern Overlay -->
@@ -184,10 +187,11 @@
 
 					<button
 						type="button"
-						class="text-[11px] font-semibold text-wine-800 hover:underline"
+						class="inline-flex items-center gap-1 rounded-full bg-cream-200/80 px-2.5 py-1 text-[11px] font-semibold text-wine-900 hover:bg-cream-300 transition-colors"
 						onclick={toggleOpen}
 					>
-						Tutup Surat
+						<span>Tutup Surat</span>
+						<X size={12} />
 					</button>
 				</div>
 
@@ -281,7 +285,9 @@
 
 	<!-- Controls Bar below the Card (Interactive Demo & Expand button) -->
 	<div
-		class="mt-4 flex w-full max-w-[340px] sm:max-w-[380px] md:max-w-[420px] items-center justify-between px-2 text-xs text-espresso-600"
+		class="mt-4 flex w-full items-center justify-between px-2 text-xs text-espresso-600 {isModal
+			? 'max-w-[min(100%,360px)] sm:max-w-[min(100%,420px)] md:max-w-[460px]'
+			: 'max-w-[min(100%,320px)] sm:max-w-[min(100%,380px)] md:max-w-[400px]'}"
 	>
 		<button
 			type="button"
@@ -289,7 +295,7 @@
 			onclick={toggleOpen}
 		>
 			<span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-			<span>{isOpen ? 'SURAT TERBUKA' : 'DEMO INTERAKTIF • KETUK SEGEL'}</span>
+			<span>{isOpen ? 'SURAT TERBUKA • KETUK UTK TUTUP' : 'DEMO INTERAKTIF • KETUK SEGEL'}</span>
 		</button>
 
 		{#if onExpand}
