@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { Badge } from '$lib/components/ui';
-	import { formatRupiah, VENDOR_CATEGORY_CONFIGS } from '@ketuk/shared';
 	import { getVendorIcon } from '$lib/icons';
-	import { ArrowLeft, Star, Phone, MapPin, BadgeCheck } from '@lucide/svelte';
+	import { formatRupiah, VENDOR_CATEGORY_CONFIGS } from '@ketuk/shared';
+	import { ArrowLeft, BadgeCheck, MapPin, Phone, Star } from '@lucide/svelte';
 	import type { PageData } from './$types';
 
 	interface Props {

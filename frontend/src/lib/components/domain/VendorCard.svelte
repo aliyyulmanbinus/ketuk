@@ -2,8 +2,7 @@
 	import type { VendorListItem } from '$lib/api';
 	import { formatRupiah, VENDOR_CATEGORY_CONFIGS } from '@ketuk/shared';
 	import { getVendorIcon } from '$lib/icons';
-	import { Star, MapPin, BadgeCheck } from '@lucide/svelte';
-	import Badge from '../ui/Badge.svelte';
+	import { BadgeCheck, MapPin, Star } from '@lucide/svelte';
 
 	interface Props {
 		vendor: VendorListItem;

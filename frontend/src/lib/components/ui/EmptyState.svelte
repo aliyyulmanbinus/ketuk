@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Inbox, type Icon as IconType } from '@lucide/svelte';
-	import type { Snippet, Component } from 'svelte';
+	import { Inbox } from '@lucide/svelte';
+	import type { Component, Snippet } from 'svelte';
 
 	interface Props {
 		icon?: Component;
