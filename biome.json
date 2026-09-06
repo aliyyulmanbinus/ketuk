@@ -15,6 +15,7 @@
 			"!**/.output",
 			"!**/node_modules",
 			"!**/migrations",
+			"!**/.mimosa",
 			"!**/*.svelte"
 		]
 	},
