@@ -19,13 +19,13 @@
 
 <div class="pointer-events-none fixed inset-x-0 bottom-4 z-[100] flex flex-col items-center gap-2 px-4">
 	{#each toasts as toast (toast.id)}
+		{@const Icon = toneIcons[toast.type]}
 		<div
 			class="pointer-events-auto flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-white shadow-lg {toneClasses[
 				toast.type
 			]}"
 			role="status"
 		>
-			{@const Icon = toneIcons[toast.type]}
 			<Icon size={16} class="shrink-0" />
 			<span>{toast.message}</span>
 			<button
