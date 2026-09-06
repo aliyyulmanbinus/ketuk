@@ -12,6 +12,7 @@
 	},
 	"dependencies": {
 		"@ketuk/shared": "workspace:*",
+		"@lucide/svelte": "^1.41.0",
 		"@supabase/ssr": "latest",
 		"@supabase/supabase-js": "latest"
 	},

@@ -2,6 +2,17 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { createSupabaseBrowserClient } from '$lib/supabase/client';
+	import {
+		Home,
+		Mail,
+		ClipboardList,
+		Store,
+		Gift,
+		Menu,
+		X,
+		LogOut,
+		type Icon as IconType,
+	} from '@lucide/svelte';
 	import type { Snippet } from 'svelte';
 	import type { LayoutData } from './$types';
 
@@ -14,15 +25,19 @@
 
 	let mobileOpen = $state(false);
 
-	const navItems = [
-		{ href: '/dashboard', label: 'Beranda', icon: '🏠' },
-		{ href: '/undangan', label: 'Undangan', icon: '💌' },
-		{ href: '/planner', label: 'Planner', icon: '📋' },
-		{ href: '/vendor', label: 'Vendor', icon: '🛍️' },
-		{ href: '/hadiah', label: 'Hadiah', icon: '🎁' },
+	const navItems: { href: string; label: string; icon: typeof IconType }[] = [
+		{ href: '/dashboard', label: 'Beranda', icon: Home },
+		{ href: '/undangan', label: 'Undangan', icon: Mail },
+		{ href: '/planner', label: 'Planner', icon: ClipboardList },
+		{ href: '/vendor', label: 'Vendor', icon: Store },
+		{ href: '/hadiah', label: 'Hadiah', icon: Gift },
 	];
 
 	const supabase = createSupabaseBrowserClient();
+
+	function isActive(href: string): boolean {
+		return $page.url.pathname === href || $page.url.pathname.startsWith(`${href}/`);
+	}
 
 	async function handleLogout() {
 		await supabase.auth.signOut();
@@ -31,7 +46,8 @@
 </script>
 
 <div class="flex min-h-screen bg-navy-50">
-	<aside class="hidden w-64 flex-col border-r border-navy-100 bg-white p-6 lg:flex">
+	<!-- Desktop sidebar -->
+	<aside class="hidden w-64 shrink-0 flex-col border-r border-navy-100 bg-white p-5 lg:flex">
 		<a href="/dashboard" class="font-display text-xl font-bold text-navy-900">
 			Ketuk<span class="text-coral-500">.id</span>
 		</a>
@@ -39,64 +55,80 @@
 			{#each navItems as item (item.href)}
 				<a
 					href={item.href}
-					class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium
-						{$page.url.pathname.startsWith(item.href)
+					class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors
+						{isActive(item.href)
 						? 'bg-coral-100 text-coral-600'
-						: 'text-navy-600 hover:bg-navy-50'}"
+						: 'text-navy-600 hover:bg-navy-50 hover:text-navy-900'}"
 				>
-					<span aria-hidden="true">{item.icon}</span>
+					<item.icon size={18} />
 					{item.label}
 				</a>
 			{/each}
 		</nav>
-		<div class="mt-auto flex flex-col gap-2 border-t border-navy-100 pt-4">
-			<p class="truncate text-xs text-navy-400">{data.user.email}</p>
+		<div class="mt-auto flex flex-col gap-3 border-t border-navy-100 pt-4">
+			<p class="truncate text-xs text-navy-400" title={data.user.email}>{data.user.email}</p>
 			<button
 				type="button"
 				onclick={handleLogout}
-				class="text-left text-sm font-medium text-navy-500 hover:text-navy-900"
+				class="inline-flex items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm font-medium text-navy-500 transition-colors hover:bg-navy-50 hover:text-navy-900"
 			>
+				<LogOut size={16} />
 				Keluar
 			</button>
 		</div>
 	</aside>
 
-	<div class="flex flex-1 flex-col">
-		<header class="flex items-center justify-between border-b border-navy-100 bg-white px-4 py-3 lg:hidden">
+	<div class="flex min-w-0 flex-1 flex-col">
+		<!-- Mobile header -->
+		<header
+			class="sticky top-0 z-30 flex items-center justify-between border-b border-navy-100 bg-white px-4 py-3 lg:hidden"
+		>
 			<a href="/dashboard" class="font-display text-lg font-bold text-navy-900">
 				Ketuk<span class="text-coral-500">.id</span>
 			</a>
 			<button
 				type="button"
 				onclick={() => (mobileOpen = !mobileOpen)}
-				aria-label="Buka menu navigasi"
+				aria-label={mobileOpen ? 'Tutup menu' : 'Buka menu'}
 				aria-expanded={mobileOpen}
-				class="text-2xl"
+				class="inline-flex h-10 w-10 items-center justify-center rounded-lg text-navy-700 hover:bg-navy-50"
 			>
-				☰
+				{#if mobileOpen}
+					<X size={22} />
+				{:else}
+					<Menu size={22} />
+				{/if}
 			</button>
 		</header>
 		{#if mobileOpen}
-			<nav class="flex flex-col gap-1 border-b border-navy-100 bg-white p-3 lg:hidden">
+			<nav
+				class="flex flex-col gap-1 border-b border-navy-100 bg-white p-3 shadow-sm lg:hidden"
+			>
 				{#each navItems as item (item.href)}
 					<a
 						href={item.href}
-						class="rounded-lg px-3 py-2 text-sm font-medium text-navy-600 hover:bg-navy-50"
+						class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium
+							{isActive(item.href) ? 'bg-coral-100 text-coral-600' : 'text-navy-600 hover:bg-navy-50'}"
 						onclick={() => (mobileOpen = false)}
 					>
-						{item.icon} {item.label}
+						<item.icon size={18} />
+						{item.label}
 					</a>
 				{/each}
-				<button
-					type="button"
-					onclick={handleLogout}
-					class="rounded-lg px-3 py-2 text-left text-sm font-medium text-navy-500"
-				>
-					Keluar
-				</button>
+				<div class="mt-2 border-t border-navy-100 pt-2">
+					<p class="truncate px-3 py-1 text-xs text-navy-400">{data.user.email}</p>
+					<button
+						type="button"
+						onclick={handleLogout}
+						class="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium text-navy-500 hover:bg-navy-50"
+					>
+						<LogOut size={16} />
+						Keluar
+					</button>
+				</div>
 			</nav>
 		{/if}
-		<main class="flex-1 p-4 sm:p-8">
+		<main class="flex-1 p-4 sm:p-6 lg:p-8">
 			{@render children()}
 		</main>
 	</div>

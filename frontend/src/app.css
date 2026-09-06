@@ -32,13 +32,20 @@
 	--color-planner-500: #38bdf8;
 	--color-planner-100: #e0f5fe;
 
+	--color-vendor-700: #166534;
 	--color-vendor-600: #15803d;
 	--color-vendor-500: #22c55e;
+	--color-vendor-200: #bbf7d0;
 	--color-vendor-100: #e0fbe9;
+	--color-vendor-50: #f0fdf4;
 
 	--color-hadiah-600: #c2410c;
 	--color-hadiah-500: #f97316;
 	--color-hadiah-100: #fef0e0;
+
+	--color-undangan-200: #ddd6fe;
+	--color-planner-200: #bae6fd;
+	--color-hadiah-200: #fed7aa;
 
 	--font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 	--font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
