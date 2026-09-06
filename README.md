@@ -1,6 +1,6 @@
 # Ketuk.id
 
-Platform modular untuk segala urusan acara di Indonesia — pernikahan, khitanan, aqiqah, ulang tahun, wisuda, reuni, syukuran, hingga corporate event. *Satu tempat untuk segala urusan acara.*
+Platform modular untuk segala urusan acara di Indonesia seperti pernikahan, khitanan, aqiqah, ulang tahun, wisuda, reuni, syukuran, hingga corporate event. *Satu tempat untuk segala urusan acara.*
 
 Empat modul yang bisa dibeli terpisah: **Undangan** (undangan digital & RSVP), **Planner** (budget, checklist, timeline, daftar tamu), **Vendor** (marketplace katering, dekorasi, fotografer, WO, MUA), dan **Hadiah** (kirim hampers, bouquet, kue ke penyelenggara acara).
 
