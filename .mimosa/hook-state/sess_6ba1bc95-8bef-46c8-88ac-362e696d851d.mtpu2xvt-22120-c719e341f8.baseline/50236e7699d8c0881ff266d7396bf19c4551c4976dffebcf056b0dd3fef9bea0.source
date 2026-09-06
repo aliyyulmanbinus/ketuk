@@ -1,0 +1,15 @@
+//#region ../packages/shared/dist/utils/format.js
+/**
+* Format rupiah utuh dengan pemisah ribuan, mis. 1250000 -> "Rp1.250.000".
+* Input harus rupiah utuh sebagai integer — jangan pakai float atau sen.
+*/
+function formatRupiah(amount) {
+	return new Intl.NumberFormat("id-ID", {
+		style: "currency",
+		currency: "IDR",
+		minimumFractionDigits: 0,
+		maximumFractionDigits: 0
+	}).format(amount).replace(/\s/g, "");
+}
+//#endregion
+export { formatRupiah as t };

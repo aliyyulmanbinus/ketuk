@@ -1,0 +1,93 @@
+import { l as stringify, o as head, u as unsubscribe_stores } from "../../../../../chunks/server.js";
+import { a as Input, r as Select, s as Button } from "../../../../../chunks/Textarea.js";
+import "../../../../../chunks/ui.js";
+import "../../../../../chunks/toast.svelte.js";
+import "../../../../../chunks/stores.js";
+import "../../../../../chunks/navigation.js";
+import "../../../../../chunks/api.js";
+import { t as EVENT_TYPE_CONFIGS } from "../../../../../chunks/event-types.js";
+import "../../../../../chunks/dist.js";
+//#region src/routes/(app)/undangan/baru/+page.svelte
+function _page($$renderer, $$props) {
+	$$renderer.component(($$renderer) => {
+		var $$store_subs;
+		let title = "";
+		let type = "";
+		let slug = "";
+		let submitting = false;
+		const typeOptions = EVENT_TYPE_CONFIGS.map((c) => ({
+			value: c.value,
+			label: `${c.emoji} ${c.label}`
+		}));
+		let $$settled = true;
+		let $$inner_renderer;
+		function $$render_inner($$renderer) {
+			head("2iw4rr", $$renderer, ($$renderer) => {
+				$$renderer.title(($$renderer) => {
+					$$renderer.push(`<title>Buat Undangan — Ketuk.id</title>`);
+				});
+			});
+			$$renderer.push(`<h1 class="font-display text-2xl font-bold text-navy-900">Buat undangan baru</h1> <p class="mt-1 text-navy-500">Isi info dasar dulu — tanggal, lokasi, dan detail lain bisa dilengkapi setelahnya.</p> <form class="mt-8 flex max-w-lg flex-col gap-5">`);
+			Select($$renderer, {
+				label: "Jenis acara",
+				options: typeOptions,
+				required: true,
+				get value() {
+					return type;
+				},
+				set value($$value) {
+					type = $$value;
+					$$settled = false;
+				}
+			});
+			$$renderer.push(`<!----> `);
+			Input($$renderer, {
+				label: "Judul acara",
+				placeholder: "Pernikahan Budi & Sinta",
+				required: true,
+				get value() {
+					return title;
+				},
+				set value($$value) {
+					title = $$value;
+					$$settled = false;
+				}
+			});
+			$$renderer.push(`<!----> `);
+			Input($$renderer, {
+				label: "Alamat undangan",
+				oninput: () => true,
+				hint: `ketuk.id/${stringify(slug || "...")}`,
+				required: true,
+				get value() {
+					return slug;
+				},
+				set value($$value) {
+					slug = $$value;
+					$$settled = false;
+				}
+			});
+			$$renderer.push(`<!----> `);
+			$$renderer.push("<!--[-1-->");
+			$$renderer.push(`<!--]--> `);
+			Button($$renderer, {
+				type: "submit",
+				loading: submitting,
+				children: ($$renderer) => {
+					$$renderer.push(`<!---->Buat Undangan`);
+				},
+				$$slots: { default: true }
+			});
+			$$renderer.push(`<!----></form>`);
+		}
+		do {
+			$$settled = true;
+			$$inner_renderer = $$renderer.copy();
+			$$render_inner($$inner_renderer);
+		} while (!$$settled);
+		$$renderer.subsume($$inner_renderer);
+		if ($$store_subs) unsubscribe_stores($$store_subs);
+	});
+}
+//#endregion
+export { _page as default };

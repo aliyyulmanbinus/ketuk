@@ -1,0 +1,10 @@
+import * as server from '../entries/pages/(public)/_slug_/tamu/_guestSlug_/_page.server.ts.js';
+
+export const index = 28;
+let component_cache;
+export const component = async () => component_cache ??= (await import('../entries/pages/(public)/_slug_/tamu/_guestSlug_/_page.svelte.js')).default;
+export { server };
+export const server_id = "src/routes/(public)/[slug]/tamu/[guestSlug]/+page.server.ts";
+export const imports = ["_app/immutable/nodes/28.C0lfjgmA.js","_app/immutable/chunks/BXjcv6Yd.js","_app/immutable/chunks/xihTtKlq.js","_app/immutable/chunks/CNEzvZkw.js","_app/immutable/chunks/CXwT2CbZ.js","_app/immutable/chunks/LgPvg1cN.js","_app/immutable/chunks/CNXsb0hC.js","_app/immutable/chunks/BqQR83Z3.js","_app/immutable/chunks/YA22jAHV.js","_app/immutable/chunks/DXsGvWiL.js","_app/immutable/chunks/Bdn8o-iY.js","_app/immutable/chunks/BsD59cNl.js","_app/immutable/chunks/BZxDoonX.js"];
+export const stylesheets = [];
+export const fonts = [];

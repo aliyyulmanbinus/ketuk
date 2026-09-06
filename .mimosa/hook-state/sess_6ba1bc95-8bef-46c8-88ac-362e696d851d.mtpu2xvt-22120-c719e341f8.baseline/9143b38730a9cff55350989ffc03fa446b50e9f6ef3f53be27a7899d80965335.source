@@ -1,0 +1,90 @@
+import { o as head } from "../../../../chunks/server.js";
+import { a as Input, s as Button } from "../../../../chunks/Textarea.js";
+import "../../../../chunks/ui.js";
+import { t as createSupabaseBrowserClient } from "../../../../chunks/client2.js";
+//#region src/routes/(auth)/daftar/+page.svelte
+function _page($$renderer, $$props) {
+	$$renderer.component(($$renderer) => {
+		const supabase = createSupabaseBrowserClient();
+		let name = "";
+		let email = "";
+		let sending = false;
+		async function handleGoogle() {
+			await supabase.auth.signInWithOAuth({
+				provider: "google",
+				options: { redirectTo: `${window.location.origin}/callback?next=${encodeURIComponent("/dashboard")}` }
+			});
+		}
+		let $$settled = true;
+		let $$inner_renderer;
+		function $$render_inner($$renderer) {
+			head("n39qo7", $$renderer, ($$renderer) => {
+				$$renderer.title(($$renderer) => {
+					$$renderer.push(`<title>Daftar — Ketuk.id</title>`);
+				});
+			});
+			$$renderer.push(`<h1 class="font-display text-xl font-semibold text-navy-900">Mulai gratis</h1> <p class="mt-1 text-sm text-navy-500">Tidak perlu kartu kredit, langsung bisa dipakai.</p> `);
+			$$renderer.push(`<!--[-1--><form class="mt-6 flex flex-col gap-4">`);
+			Input($$renderer, {
+				label: "Nama",
+				placeholder: "Nama kamu",
+				required: true,
+				autocomplete: "name",
+				get value() {
+					return name;
+				},
+				set value($$value) {
+					name = $$value;
+					$$settled = false;
+				}
+			});
+			$$renderer.push(`<!----> `);
+			Input($$renderer, {
+				label: "Email",
+				type: "email",
+				placeholder: "nama@email.com",
+				required: true,
+				autocomplete: "email",
+				get value() {
+					return email;
+				},
+				set value($$value) {
+					email = $$value;
+					$$settled = false;
+				}
+			});
+			$$renderer.push(`<!----> `);
+			$$renderer.push("<!--[-1-->");
+			$$renderer.push(`<!--]--> `);
+			Button($$renderer, {
+				type: "submit",
+				loading: sending,
+				fullWidth: true,
+				children: ($$renderer) => {
+					$$renderer.push(`<!---->Daftar Gratis`);
+				},
+				$$slots: { default: true }
+			});
+			$$renderer.push(`<!----></form> <div class="my-6 flex items-center gap-3 text-xs text-navy-400"><span class="h-px flex-1 bg-navy-100"></span> atau <span class="h-px flex-1 bg-navy-100"></span></div> `);
+			Button($$renderer, {
+				variant: "secondary",
+				fullWidth: true,
+				onclick: handleGoogle,
+				children: ($$renderer) => {
+					$$renderer.push(`<!---->Daftar dengan Google`);
+				},
+				$$slots: { default: true }
+			});
+			$$renderer.push(`<!---->`);
+			$$renderer.push(`<!--]--> <p class="mt-6 text-center text-sm text-navy-500">Sudah punya akun? <a href="/masuk" class="font-medium text-coral-500">Masuk</a></p>`);
+		}
+		do {
+			$$settled = true;
+			$$inner_renderer = $$renderer.copy();
+			$$render_inner($$inner_renderer);
+		} while (!$$settled);
+		$$renderer.subsume($$inner_renderer);
+	});
+}
+//#endregion
+export { _page as default };

@@ -1,0 +1,1 @@
+import{K as e}from"./BXjcv6Yd.js";var t=e([]),n=0;function r(){return t}function i(e,r=`info`){let i=n++;t.push({id:i,type:r,message:e}),setTimeout(()=>a(i),4e3)}function a(e){let n=t.findIndex(t=>t.id===e);n!==-1&&t.splice(n,1)}export{r as n,i as r,a as t};

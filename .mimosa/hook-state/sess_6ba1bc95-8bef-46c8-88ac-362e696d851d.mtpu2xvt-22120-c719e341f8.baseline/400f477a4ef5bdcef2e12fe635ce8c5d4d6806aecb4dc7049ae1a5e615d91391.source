@@ -1,0 +1,63 @@
+import { S as attr, a as ensure_array_like, i as derived, l as stringify, o as head, w as escape_html } from "../../../../chunks/server.js";
+import { o as EmptyState, s as Button } from "../../../../chunks/Textarea.js";
+import "../../../../chunks/ui.js";
+import { a as EventCard } from "../../../../chunks/domain.js";
+import "../../../../chunks/dist.js";
+import { t as formatRupiah } from "../../../../chunks/format.js";
+//#region src/routes/(app)/planner/+page.svelte
+function _page($$renderer, $$props) {
+	$$renderer.component(($$renderer) => {
+		let { data } = $$props;
+		const currentEvent = derived(() => data.events.find((e) => e.id === data.eventId));
+		head("x6qysq", $$renderer, ($$renderer) => {
+			$$renderer.title(($$renderer) => {
+				$$renderer.push(`<title>Planner — Ketuk.id</title>`);
+			});
+		});
+		if (!data.eventId) {
+			$$renderer.push(`<!--[0--><h1 class="font-display text-2xl font-bold text-navy-900">Planner</h1> <p class="mt-1 text-navy-500">Pilih acara yang mau dikelola.</p> `);
+			if (data.events.length === 0) {
+				$$renderer.push(`<!--[0--><div class="mt-8">`);
+				{
+					function action($$renderer) {
+						Button($$renderer, {
+							href: "/undangan/baru",
+							children: ($$renderer) => {
+								$$renderer.push(`<!---->Buat Undangan`);
+							},
+							$$slots: { default: true }
+						});
+					}
+					EmptyState($$renderer, {
+						icon: "📋",
+						title: "Belum ada undangan",
+						description: "Buat undangan dulu sebelum mengatur planner.",
+						action,
+						$$slots: { action: true }
+					});
+				}
+				$$renderer.push(`<!----></div>`);
+			} else {
+				$$renderer.push(`<!--[-1--><div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"><!--[-->`);
+				const each_array = ensure_array_like(data.events);
+				for (let $$index = 0, $$length = each_array.length; $$index < $$length; $$index++) {
+					let event = each_array[$$index];
+					$$renderer.push(`<a${attr("href", `/planner?event=${stringify(event.id)}`)} class="block">`);
+					EventCard($$renderer, { event });
+					$$renderer.push(`<!----></a>`);
+				}
+				$$renderer.push(`<!--]--></div>`);
+			}
+			$$renderer.push(`<!--]-->`);
+		} else {
+			$$renderer.push(`<!--[-1--><div class="flex items-center justify-between"><div><h1 class="font-display text-2xl font-bold text-navy-900">Planner — ${escape_html(currentEvent()?.title ?? "")}</h1> <a href="/planner" class="text-sm text-navy-400 hover:text-navy-700">Ganti acara</a></div></div> `);
+			if (data.error) $$renderer.push(`<!--[0--><p class="mt-6 rounded-lg bg-red-50 p-4 text-sm text-red-600">${escape_html(data.error)}</p>`);
+			else if (data.summary) $$renderer.push(`<!--[1--><div class="mt-6 grid gap-4 sm:grid-cols-2"><a${attr("href", `/planner/budget?event=${stringify(data.eventId)}`)} class="rounded-xl border border-navy-100 bg-white p-6 transition-shadow hover:shadow-md"><p class="text-sm text-navy-400">Budget</p> <p class="mt-1 font-display text-2xl font-bold text-navy-900">${escape_html(formatRupiah(data.summary.budget.totalActual))}</p> <p class="text-sm text-navy-500">dari estimasi ${escape_html(formatRupiah(data.summary.budget.totalEstimated))}</p></a> <a${attr("href", `/planner/checklist?event=${stringify(data.eventId)}`)} class="rounded-xl border border-navy-100 bg-white p-6 transition-shadow hover:shadow-md"><p class="text-sm text-navy-400">Checklist</p> <p class="mt-1 font-display text-2xl font-bold text-navy-900">${escape_html(data.summary.checklist.done)}/${escape_html(data.summary.checklist.total)}</p> <p class="text-sm text-navy-500">item selesai</p></a></div> <div class="mt-4"><a${attr("href", `/planner/timeline?event=${stringify(data.eventId)}`)} class="block rounded-xl border border-navy-100 bg-white p-6 transition-shadow hover:shadow-md"><p class="font-display font-semibold text-navy-900">Timeline / Rundown Acara →</p></a></div>`);
+			else $$renderer.push("<!--[-1-->");
+			$$renderer.push(`<!--]-->`);
+		}
+		$$renderer.push(`<!--]-->`);
+	});
+}
+//#endregion
+export { _page as default };

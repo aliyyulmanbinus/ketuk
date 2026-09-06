@@ -1,0 +1,14 @@
+import { redirect } from "@sveltejs/kit";
+//#region src/routes/(auth)/callback/+server.ts
+/** Tujuan redirect Supabase (magic link & OAuth) setelah user klik link/setuju di provider. */
+var GET = async ({ url, locals }) => {
+	const code = url.searchParams.get("code");
+	const next = url.searchParams.get("next") ?? "/dashboard";
+	if (code) {
+		const { error } = await locals.supabase.auth.exchangeCodeForSession(code);
+		if (!error) throw redirect(303, next);
+	}
+	throw redirect(303, "/masuk?error=auth");
+};
+//#endregion
+export { GET };

@@ -1,0 +1,10 @@
+import { redirect } from "@sveltejs/kit";
+//#region src/routes/(auth)/+layout.server.ts
+/** Sudah login? Tidak perlu lihat form masuk/daftar lagi. */
+var load = async ({ locals }) => {
+	const { session } = await locals.safeGetSession();
+	if (session) throw redirect(303, "/dashboard");
+	return {};
+};
+//#endregion
+export { load };

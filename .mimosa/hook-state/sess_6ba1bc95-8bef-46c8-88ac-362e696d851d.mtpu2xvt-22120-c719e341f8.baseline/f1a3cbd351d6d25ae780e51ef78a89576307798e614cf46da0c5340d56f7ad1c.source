@@ -1,0 +1,18 @@
+import { p as listWishes } from "../../../../../../chunks/api.js";
+//#region src/routes/(app)/undangan/[id]/ucapan/+page.ts
+var load = async ({ fetch, parent }) => {
+	const { event } = await parent();
+	try {
+		return {
+			wishes: await listWishes(event.slug, { fetch }),
+			error: null
+		};
+	} catch {
+		return {
+			wishes: [],
+			error: "Koneksi terputus. Coba muat ulang."
+		};
+	}
+};
+//#endregion
+export { load };

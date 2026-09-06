@@ -1,0 +1,20 @@
+//#region src/routes/(app)/hadiah/+page.server.ts
+/**
+* Query langsung ke view `gift_orders_safe` (backend/sql/rls-policies.sql) lewat
+* Supabase client — bukan lewat backend Hono. View ini sudah menyaring kolom
+* sensitif (payment_id, nomor HP pengirim) dan baris ke event milik user ini
+* saja, jadi query di sini aman dilakukan langsung.
+*/
+var load = async ({ locals }) => {
+	const { data, error } = await locals.supabase.from("gift_orders_safe").select("*").order("created_at", { ascending: false }).limit(100);
+	if (error) return {
+		orders: [],
+		error: "Gagal memuat data hadiah."
+	};
+	return {
+		orders: data ?? [],
+		error: null
+	};
+};
+//#endregion
+export { load };

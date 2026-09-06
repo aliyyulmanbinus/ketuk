@@ -1,0 +1,58 @@
+import { S as attr, a as ensure_array_like, l as stringify, o as head, w as escape_html } from "../../../../chunks/server.js";
+import { c as Badge, o as EmptyState } from "../../../../chunks/Textarea.js";
+import "../../../../chunks/ui.js";
+import "../../../../chunks/dist.js";
+import { t as formatRupiah } from "../../../../chunks/format.js";
+//#region src/routes/(app)/hadiah/+page.svelte
+function _page($$renderer, $$props) {
+	$$renderer.component(($$renderer) => {
+		let { data } = $$props;
+		const statusLabel = {
+			pending: "Menunggu Bayar",
+			paid: "Dibayar",
+			processing: "Diproses",
+			shipped: "Dikirim",
+			delivered: "Sampai",
+			cancelled: "Dibatalkan"
+		};
+		function statusTone(status) {
+			if (status === "delivered") return "success";
+			if (status === "cancelled") return "danger";
+			return "neutral";
+		}
+		head("hr6rib", $$renderer, ($$renderer) => {
+			$$renderer.title(($$renderer) => {
+				$$renderer.push(`<title>Hadiah — Ketuk.id</title>`);
+			});
+		});
+		$$renderer.push(`<h1 class="font-display text-2xl font-bold text-navy-900">Hadiah Masuk</h1> <p class="mt-1 text-navy-500">Semua hadiah yang dikirim tamu ke acaramu.</p> <div class="mt-8">`);
+		if (data.error) $$renderer.push(`<!--[0--><p class="rounded-lg bg-red-50 p-4 text-sm text-red-600">${escape_html(data.error)}</p>`);
+		else if (data.orders.length === 0) {
+			$$renderer.push("<!--[1-->");
+			EmptyState($$renderer, {
+				icon: "🎁",
+				title: "Belum ada hadiah masuk",
+				description: "Hadiah yang dikirim tamu akan muncul di sini."
+			});
+		} else {
+			$$renderer.push(`<!--[-1--><ul class="flex flex-col gap-3"><!--[-->`);
+			const each_array = ensure_array_like(data.orders);
+			for (let $$index = 0, $$length = each_array.length; $$index < $$length; $$index++) {
+				let order = each_array[$$index];
+				$$renderer.push(`<li><a${attr("href", `/hadiah/${stringify(order.id)}`)} class="flex items-center justify-between gap-4 rounded-xl border border-navy-100 bg-white p-4 transition-shadow hover:shadow-md"><div><p class="font-medium text-navy-900">${escape_html(order.sender_name)} → ${escape_html(order.recipient_name)}</p> <p class="text-sm text-navy-500">${escape_html(formatRupiah(order.total_amount))} · ${escape_html(order.quantity)}x</p></div> `);
+				Badge($$renderer, {
+					tone: statusTone(order.status),
+					children: ($$renderer) => {
+						$$renderer.push(`<!---->${escape_html(statusLabel[order.status] ?? order.status)}`);
+					},
+					$$slots: { default: true }
+				});
+				$$renderer.push(`<!----></a></li>`);
+			}
+			$$renderer.push(`<!--]--></ul>`);
+		}
+		$$renderer.push(`<!--]--></div>`);
+	});
+}
+//#endregion
+export { _page as default };

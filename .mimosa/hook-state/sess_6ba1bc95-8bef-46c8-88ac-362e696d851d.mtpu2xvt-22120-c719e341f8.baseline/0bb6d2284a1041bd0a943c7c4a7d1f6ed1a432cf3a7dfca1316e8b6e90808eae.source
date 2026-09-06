@@ -1,0 +1,9 @@
+import { error } from "@sveltejs/kit";
+//#region src/routes/(app)/hadiah/[id]/+page.server.ts
+var load = async ({ locals, params }) => {
+	const { data, error: dbError } = await locals.supabase.from("gift_orders_safe").select("*").eq("id", params.id).maybeSingle();
+	if (dbError || !data) throw error(404, "Hadiah tidak ditemukan");
+	return { order: data };
+};
+//#endregion
+export { load };

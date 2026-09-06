@@ -1,0 +1,159 @@
+import { S as attr, c as store_get, l as stringify, o as head, u as unsubscribe_stores, w as escape_html } from "../../../../../chunks/server.js";
+import { a as Input, i as Modal, s as Button } from "../../../../../chunks/Textarea.js";
+import "../../../../../chunks/ui.js";
+import { t as confirmDialog } from "../../../../../chunks/confirm.svelte.js";
+import { n as pushToast } from "../../../../../chunks/toast.svelte.js";
+import { t as invalidateAll } from "../../../../../chunks/client.js";
+import { t as page } from "../../../../../chunks/stores.js";
+import "../../../../../chunks/navigation.js";
+import { r as deleteBudgetItem } from "../../../../../chunks/api.js";
+import { s as BudgetTable } from "../../../../../chunks/domain.js";
+//#region src/routes/(app)/planner/budget/+page.svelte
+function _page($$renderer, $$props) {
+	$$renderer.component(($$renderer) => {
+		var $$store_subs;
+		let { data } = $$props;
+		let modalOpen = false;
+		let editing = null;
+		let category = "";
+		let name = "";
+		let estimated = "0";
+		let actual = "";
+		let submitting = false;
+		function openCreate() {
+			editing = null;
+			category = "";
+			name = "";
+			estimated = "0";
+			actual = "";
+			modalOpen = true;
+		}
+		function openEdit(item) {
+			editing = item;
+			category = item.category;
+			name = item.name;
+			estimated = String(item.estimated);
+			actual = item.actual !== null ? String(item.actual) : "";
+			modalOpen = true;
+		}
+		async function handleDelete(item) {
+			if (!await confirmDialog({
+				title: "Hapus item budget?",
+				message: `"${item.name}" akan dihapus.`,
+				danger: true
+			})) return;
+			try {
+				await deleteBudgetItem(data.eventId, item.id, { accessToken: store_get($$store_subs ??= {}, "$page", page).data.accessToken });
+				pushToast("Item budget dihapus.", "success");
+				await invalidateAll();
+			} catch {
+				pushToast("Gagal menghapus.", "error");
+			}
+		}
+		let $$settled = true;
+		let $$inner_renderer;
+		function $$render_inner($$renderer) {
+			head("xj2kvs", $$renderer, ($$renderer) => {
+				$$renderer.title(($$renderer) => {
+					$$renderer.push(`<title>Budget — Ketuk.id</title>`);
+				});
+			});
+			$$renderer.push(`<div class="flex items-center justify-between"><div><h1 class="font-display text-2xl font-bold text-navy-900">Budget</h1> <a${attr("href", `/planner?event=${stringify(data.eventId)}`)} class="text-sm text-navy-400 hover:text-navy-700">← Kembali ke Planner</a></div> `);
+			Button($$renderer, {
+				onclick: openCreate,
+				children: ($$renderer) => {
+					$$renderer.push(`<!---->Tambah Item`);
+				},
+				$$slots: { default: true }
+			});
+			$$renderer.push(`<!----></div> <div class="mt-6">`);
+			if (data.error) $$renderer.push(`<!--[0--><p class="rounded-lg bg-red-50 p-4 text-sm text-red-600">${escape_html(data.error)}</p>`);
+			else {
+				$$renderer.push("<!--[-1-->");
+				BudgetTable($$renderer, {
+					items: data.items,
+					onEdit: openEdit,
+					onDelete: handleDelete
+				});
+			}
+			$$renderer.push(`<!--]--></div> `);
+			Modal($$renderer, {
+				open: modalOpen,
+				title: editing ? "Ubah Item Budget" : "Tambah Item Budget",
+				onclose: () => modalOpen = false,
+				children: ($$renderer) => {
+					$$renderer.push(`<form class="flex flex-col gap-4">`);
+					Input($$renderer, {
+						label: "Nama item",
+						required: true,
+						get value() {
+							return name;
+						},
+						set value($$value) {
+							name = $$value;
+							$$settled = false;
+						}
+					});
+					$$renderer.push(`<!----> `);
+					Input($$renderer, {
+						label: "Kategori",
+						required: true,
+						placeholder: "Katering",
+						get value() {
+							return category;
+						},
+						set value($$value) {
+							category = $$value;
+							$$settled = false;
+						}
+					});
+					$$renderer.push(`<!----> <div class="grid grid-cols-2 gap-3">`);
+					Input($$renderer, {
+						label: "Estimasi (Rp)",
+						type: "number",
+						get value() {
+							return estimated;
+						},
+						set value($$value) {
+							estimated = $$value;
+							$$settled = false;
+						}
+					});
+					$$renderer.push(`<!----> `);
+					Input($$renderer, {
+						label: "Aktual (Rp, opsional)",
+						type: "number",
+						get value() {
+							return actual;
+						},
+						set value($$value) {
+							actual = $$value;
+							$$settled = false;
+						}
+					});
+					$$renderer.push(`<!----></div> `);
+					Button($$renderer, {
+						type: "submit",
+						loading: submitting,
+						children: ($$renderer) => {
+							$$renderer.push(`<!---->Simpan`);
+						},
+						$$slots: { default: true }
+					});
+					$$renderer.push(`<!----></form>`);
+				},
+				$$slots: { default: true }
+			});
+			$$renderer.push(`<!---->`);
+		}
+		do {
+			$$settled = true;
+			$$inner_renderer = $$renderer.copy();
+			$$render_inner($$inner_renderer);
+		} while (!$$settled);
+		$$renderer.subsume($$inner_renderer);
+		if ($$store_subs) unsubscribe_stores($$store_subs);
+	});
+}
+//#endregion
+export { _page as default };

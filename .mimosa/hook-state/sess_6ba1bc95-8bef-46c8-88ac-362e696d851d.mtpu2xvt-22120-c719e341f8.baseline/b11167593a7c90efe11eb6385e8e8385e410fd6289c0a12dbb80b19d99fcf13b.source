@@ -1,0 +1,20 @@
+import { o as head, w as escape_html } from "../../../../../chunks/server.js";
+import "../../../../../chunks/dist.js";
+import { t as formatRupiah } from "../../../../../chunks/format.js";
+//#region src/routes/(app)/hadiah/[id]/+page.svelte
+function _page($$renderer, $$props) {
+	$$renderer.component(($$renderer) => {
+		let { data } = $$props;
+		head("1aivnqz", $$renderer, ($$renderer) => {
+			$$renderer.title(($$renderer) => {
+				$$renderer.push(`<title>Detail Hadiah — Ketuk.id</title>`);
+			});
+		});
+		$$renderer.push(`<a href="/hadiah" class="text-sm text-navy-400 hover:text-navy-700">← Semua Hadiah</a> <div class="mt-4 flex flex-col gap-4 rounded-2xl border border-navy-100 bg-white p-8"><h1 class="font-display text-xl font-bold text-navy-900">Hadiah dari ${escape_html(data.order.sender_name)}</h1> <dl class="grid gap-4 text-sm sm:grid-cols-2"><div><dt class="text-navy-400">Penerima</dt> <dd class="text-navy-900">${escape_html(data.order.recipient_name)}</dd></div> <div><dt class="text-navy-400">Alamat</dt> <dd class="text-navy-900">${escape_html(data.order.recipient_address)}</dd></div> <div><dt class="text-navy-400">Jumlah</dt> <dd class="text-navy-900">${escape_html(data.order.quantity)}x</dd></div> <div><dt class="text-navy-400">Total</dt> <dd class="text-navy-900">${escape_html(formatRupiah(data.order.total_amount))}</dd></div> <div><dt class="text-navy-400">Status</dt> <dd class="text-navy-900">${escape_html(data.order.status)}</dd></div></dl> `);
+		if (data.order.message) $$renderer.push(`<!--[0--><div><p class="text-sm text-navy-400">Pesan</p> <p class="mt-1 text-navy-700">${escape_html(data.order.message)}</p></div>`);
+		else $$renderer.push("<!--[-1-->");
+		$$renderer.push(`<!--]--></div>`);
+	});
+}
+//#endregion
+export { _page as default };

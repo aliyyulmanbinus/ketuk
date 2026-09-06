@@ -1,0 +1,15 @@
+// @ts-nocheck
+import type { WishItem } from '$lib/api';
+import { listWishes } from '$lib/api';
+import type { PageLoad } from './$types';
+
+export const load = async ({ fetch, parent }: Parameters<PageLoad>[0]) => {
+	const { event } = await parent();
+
+	try {
+		const wishes = await listWishes(event.slug, { fetch });
+		return { wishes, error: null };
+	} catch {
+		return { wishes: [] as WishItem[], error: 'Koneksi terputus. Coba muat ulang.' };
+	}
+};

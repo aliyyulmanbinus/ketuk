@@ -1,0 +1,31 @@
+import { redirect } from "@sveltejs/kit";
+//#region src/routes/(app)/+layout.server.ts
+/**
+* Guard dashboard: redirect ke /masuk kalau belum login, bawa `?next=` supaya
+* setelah login kembali ke halaman yang dituju.
+*
+* Juga memastikan baris `profiles` ada untuk user ini (just-in-time). Policy
+* RLS `profiles_insert_own` (backend/sql/rls-policies.sql) mengizinkan user
+* insert profilnya sendiri, jadi ini aman dilakukan langsung dari sini lewat
+* Supabase client tanpa perlu endpoint backend khusus.
+*/
+var load = async ({ locals, url }) => {
+	const { session, user } = await locals.safeGetSession();
+	if (!session || !user) throw redirect(303, `/masuk?next=${encodeURIComponent(url.pathname)}`);
+	const { data: profile } = await locals.supabase.from("profiles").select("id, name").eq("id", user.id).maybeSingle();
+	if (!profile) {
+		const metadataName = user.user_metadata?.name;
+		const name = typeof metadataName === "string" && metadataName.trim() ? metadataName : user.email ?? "Pengguna Ketuk";
+		await locals.supabase.from("profiles").insert({
+			id: user.id,
+			name
+		});
+	}
+	return {
+		session,
+		user,
+		accessToken: session.access_token
+	};
+};
+//#endregion
+export { load };

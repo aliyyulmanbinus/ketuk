@@ -11,3 +11,7 @@ export { default as RsvpForm } from './RsvpForm.svelte';
 export { default as VendorCard } from './VendorCard.svelte';
 export { default as WishForm } from './WishForm.svelte';
 export { default as WishList } from './WishList.svelte';
+export { default as PhoneMockup } from './PhoneMockup.svelte';
+export { default as TemplateCard } from './TemplateCard.svelte';
+export type { TemplateItem } from './TemplateCard.svelte';
+export { default as TemplatePreviewModal } from './TemplatePreviewModal.svelte';

@@ -1,0 +1,79 @@
+import { c as store_get, i as derived, o as head, u as unsubscribe_stores } from "../../../../chunks/server.js";
+import { a as Input, s as Button } from "../../../../chunks/Textarea.js";
+import "../../../../chunks/ui.js";
+import { t as page } from "../../../../chunks/stores.js";
+import { t as createSupabaseBrowserClient } from "../../../../chunks/client2.js";
+//#region src/routes/(auth)/masuk/+page.svelte
+function _page($$renderer, $$props) {
+	$$renderer.component(($$renderer) => {
+		var $$store_subs;
+		const supabase = createSupabaseBrowserClient();
+		let email = "";
+		let sending = false;
+		const next = derived(() => store_get($$store_subs ??= {}, "$page", page).url.searchParams.get("next") ?? "/dashboard");
+		async function handleGoogle() {
+			await supabase.auth.signInWithOAuth({
+				provider: "google",
+				options: { redirectTo: `${window.location.origin}/callback?next=${encodeURIComponent(next())}` }
+			});
+		}
+		let $$settled = true;
+		let $$inner_renderer;
+		function $$render_inner($$renderer) {
+			head("27lk6y", $$renderer, ($$renderer) => {
+				$$renderer.title(($$renderer) => {
+					$$renderer.push(`<title>Masuk — Ketuk.id</title>`);
+				});
+			});
+			$$renderer.push(`<h1 class="font-display text-xl font-semibold text-navy-900">Masuk ke Ketuk.id</h1> <p class="mt-1 text-sm text-navy-500">Kelola undangan dan acaramu.</p> `);
+			$$renderer.push(`<!--[-1--><form class="mt-6 flex flex-col gap-4">`);
+			Input($$renderer, {
+				label: "Email",
+				type: "email",
+				placeholder: "nama@email.com",
+				required: true,
+				autocomplete: "email",
+				get value() {
+					return email;
+				},
+				set value($$value) {
+					email = $$value;
+					$$settled = false;
+				}
+			});
+			$$renderer.push(`<!----> `);
+			$$renderer.push("<!--[-1-->");
+			$$renderer.push(`<!--]--> `);
+			Button($$renderer, {
+				type: "submit",
+				loading: sending,
+				fullWidth: true,
+				children: ($$renderer) => {
+					$$renderer.push(`<!---->Kirim Link Masuk`);
+				},
+				$$slots: { default: true }
+			});
+			$$renderer.push(`<!----></form> <div class="my-6 flex items-center gap-3 text-xs text-navy-400"><span class="h-px flex-1 bg-navy-100"></span> atau <span class="h-px flex-1 bg-navy-100"></span></div> `);
+			Button($$renderer, {
+				variant: "secondary",
+				fullWidth: true,
+				onclick: handleGoogle,
+				children: ($$renderer) => {
+					$$renderer.push(`<!---->Lanjutkan dengan Google`);
+				},
+				$$slots: { default: true }
+			});
+			$$renderer.push(`<!---->`);
+			$$renderer.push(`<!--]--> <p class="mt-6 text-center text-sm text-navy-500">Belum punya akun? <a href="/daftar" class="font-medium text-coral-500">Daftar</a></p>`);
+		}
+		do {
+			$$settled = true;
+			$$inner_renderer = $$renderer.copy();
+			$$render_inner($$inner_renderer);
+		} while (!$$settled);
+		$$renderer.subsume($$inner_renderer);
+		if ($$store_subs) unsubscribe_stores($$store_subs);
+	});
+}
+//#endregion
+export { _page as default };

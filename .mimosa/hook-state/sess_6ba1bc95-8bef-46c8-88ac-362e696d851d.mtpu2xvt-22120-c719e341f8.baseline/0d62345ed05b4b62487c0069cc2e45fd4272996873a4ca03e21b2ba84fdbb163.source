@@ -1,0 +1,10 @@
+import * as server from '../entries/pages/(app)/_layout.server.ts.js';
+
+export const index = 2;
+let component_cache;
+export const component = async () => component_cache ??= (await import('../entries/pages/(app)/_layout.svelte.js')).default;
+export { server };
+export const server_id = "src/routes/(app)/+layout.server.ts";
+export const imports = ["_app/immutable/nodes/2.B52q1AYi.js","_app/immutable/chunks/BXjcv6Yd.js","_app/immutable/chunks/BgNd3R7i.js","_app/immutable/chunks/Dt-HX3Vu.js","_app/immutable/chunks/xihTtKlq.js","_app/immutable/chunks/BHPnP0Ks.js","_app/immutable/chunks/CkiFVLo2.js","_app/immutable/chunks/BEF9ZaOR.js","_app/immutable/chunks/BqQR83Z3.js"];
+export const stylesheets = [];
+export const fonts = [];

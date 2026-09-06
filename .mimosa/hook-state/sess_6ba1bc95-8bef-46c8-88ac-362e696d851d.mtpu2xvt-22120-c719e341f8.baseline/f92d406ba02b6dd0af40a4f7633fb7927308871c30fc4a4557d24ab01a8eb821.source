@@ -1,0 +1,202 @@
+import { i as derived, o as head, u as unsubscribe_stores, w as escape_html } from "../../../../../../chunks/server.js";
+import { a as Input, s as Button, t as Textarea } from "../../../../../../chunks/Textarea.js";
+import "../../../../../../chunks/ui.js";
+import "../../../../../../chunks/toast.svelte.js";
+import "../../../../../../chunks/stores.js";
+import "../../../../../../chunks/navigation.js";
+import { t as createSupabaseBrowserClient } from "../../../../../../chunks/client2.js";
+import "../../../../../../chunks/api.js";
+//#region src/routes/(app)/undangan/[id]/edit/+page.svelte
+function _page($$renderer, $$props) {
+	$$renderer.component(($$renderer) => {
+		var $$store_subs;
+		let { data } = $$props;
+		createSupabaseBrowserClient();
+		const isWeddingLike = derived(() => data.event.type === "wedding" || data.event.type === "engagement");
+		const invitation = data.event.invitation;
+		let date = data.event.date ?? "";
+		let timeStart = data.event.timeStart ?? "";
+		let timeEnd = data.event.timeEnd ?? "";
+		let venue = data.event.venue ?? "";
+		let location = data.event.location ?? "";
+		let locationUrl = data.event.locationUrl ?? "";
+		let savingEvent = false;
+		let openingText = invitation?.openingText ?? "";
+		let closingText = invitation?.closingText ?? "";
+		let groomName = invitation && "groomName" in invitation ? invitation.groomName ?? "" : "";
+		let brideName = invitation && "brideName" in invitation ? invitation.brideName ?? "" : "";
+		let hostName = invitation && "hostName" in invitation ? invitation.hostName ?? "" : "";
+		let savingInvitation = false;
+		let $$settled = true;
+		let $$inner_renderer;
+		function $$render_inner($$renderer) {
+			head("j1q3wd", $$renderer, ($$renderer) => {
+				$$renderer.title(($$renderer) => {
+					$$renderer.push(`<title>Edit ${escape_html(data.event.title)} — Ketuk.id</title>`);
+				});
+			});
+			$$renderer.push(`<div class="flex flex-col gap-8"><form class="flex flex-col gap-4 rounded-xl border border-navy-100 bg-white p-6"><h2 class="font-display text-lg font-semibold text-navy-900">Waktu &amp; Tempat</h2> <div class="grid gap-4 sm:grid-cols-2">`);
+			Input($$renderer, {
+				label: "Tanggal",
+				type: "date",
+				get value() {
+					return date;
+				},
+				set value($$value) {
+					date = $$value;
+					$$settled = false;
+				}
+			});
+			$$renderer.push(`<!----> <div class="grid grid-cols-2 gap-3">`);
+			Input($$renderer, {
+				label: "Jam mulai",
+				type: "time",
+				get value() {
+					return timeStart;
+				},
+				set value($$value) {
+					timeStart = $$value;
+					$$settled = false;
+				}
+			});
+			$$renderer.push(`<!----> `);
+			Input($$renderer, {
+				label: "Jam selesai",
+				type: "time",
+				get value() {
+					return timeEnd;
+				},
+				set value($$value) {
+					timeEnd = $$value;
+					$$settled = false;
+				}
+			});
+			$$renderer.push(`<!----></div> `);
+			Input($$renderer, {
+				label: "Nama venue",
+				placeholder: "Gedung Serbaguna Grand Puri",
+				get value() {
+					return venue;
+				},
+				set value($$value) {
+					venue = $$value;
+					$$settled = false;
+				}
+			});
+			$$renderer.push(`<!----> `);
+			Input($$renderer, {
+				label: "Alamat lengkap",
+				placeholder: "Jl. Merdeka No. 1, Jakarta",
+				get value() {
+					return location;
+				},
+				set value($$value) {
+					location = $$value;
+					$$settled = false;
+				}
+			});
+			$$renderer.push(`<!----></div> `);
+			Input($$renderer, {
+				label: "Link Google Maps",
+				placeholder: "https://maps.google.com/...",
+				get value() {
+					return locationUrl;
+				},
+				set value($$value) {
+					locationUrl = $$value;
+					$$settled = false;
+				}
+			});
+			$$renderer.push(`<!----> <div>`);
+			Button($$renderer, {
+				type: "submit",
+				loading: savingEvent,
+				children: ($$renderer) => {
+					$$renderer.push(`<!---->Simpan Waktu &amp; Tempat`);
+				},
+				$$slots: { default: true }
+			});
+			$$renderer.push(`<!----></div></form> <form class="flex flex-col gap-4 rounded-xl border border-navy-100 bg-white p-6"><h2 class="font-display text-lg font-semibold text-navy-900">Isi Undangan</h2> `);
+			if (isWeddingLike()) {
+				$$renderer.push(`<!--[0--><div class="grid gap-4 sm:grid-cols-2">`);
+				Input($$renderer, {
+					label: "Nama mempelai pria",
+					get value() {
+						return groomName;
+					},
+					set value($$value) {
+						groomName = $$value;
+						$$settled = false;
+					}
+				});
+				$$renderer.push(`<!----> `);
+				Input($$renderer, {
+					label: "Nama mempelai wanita",
+					get value() {
+						return brideName;
+					},
+					set value($$value) {
+						brideName = $$value;
+						$$settled = false;
+					}
+				});
+				$$renderer.push(`<!----></div>`);
+			} else {
+				$$renderer.push("<!--[-1-->");
+				Input($$renderer, {
+					label: "Nama tuan rumah / penyelenggara",
+					get value() {
+						return hostName;
+					},
+					set value($$value) {
+						hostName = $$value;
+						$$settled = false;
+					}
+				});
+			}
+			$$renderer.push(`<!--]--> `);
+			Textarea($$renderer, {
+				label: "Kata pembuka",
+				rows: 3,
+				get value() {
+					return openingText;
+				},
+				set value($$value) {
+					openingText = $$value;
+					$$settled = false;
+				}
+			});
+			$$renderer.push(`<!----> `);
+			Textarea($$renderer, {
+				label: "Kata penutup",
+				rows: 3,
+				get value() {
+					return closingText;
+				},
+				set value($$value) {
+					closingText = $$value;
+					$$settled = false;
+				}
+			});
+			$$renderer.push(`<!----> <div>`);
+			Button($$renderer, {
+				type: "submit",
+				loading: savingInvitation,
+				children: ($$renderer) => {
+					$$renderer.push(`<!---->Simpan Isi Undangan`);
+				},
+				$$slots: { default: true }
+			});
+			$$renderer.push(`<!----></div></form></div>`);
+		}
+		do {
+			$$settled = true;
+			$$inner_renderer = $$renderer.copy();
+			$$render_inner($$inner_renderer);
+		} while (!$$settled);
+		$$renderer.subsume($$inner_renderer);
+		if ($$store_subs) unsubscribe_stores($$store_subs);
+	});
+}
+//#endregion
+export { _page as default };

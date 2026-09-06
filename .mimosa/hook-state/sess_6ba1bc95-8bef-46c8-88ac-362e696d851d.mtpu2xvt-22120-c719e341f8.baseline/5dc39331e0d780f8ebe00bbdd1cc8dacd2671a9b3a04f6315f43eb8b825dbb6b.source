@@ -1,0 +1,25 @@
+import { a as ensure_array_like, o as head } from "../../../../chunks/server.js";
+import { n as PlanCard } from "../../../../chunks/domain.js";
+import { t as PLANS } from "../../../../chunks/plans.js";
+import "../../../../chunks/dist.js";
+//#region src/routes/(marketing)/harga/+page.svelte
+function _page($$renderer) {
+	head("ly9nc4", $$renderer, ($$renderer) => {
+		$$renderer.title(($$renderer) => {
+			$$renderer.push(`<title>Harga — Ketuk.id</title>`);
+		});
+		$$renderer.push(`<meta name="description" content="Harga Ketuk.id per acara, bukan langganan bulanan. Mulai gratis, upgrade kapan saja."/>`);
+	});
+	$$renderer.push(`<section class="py-20"><div class="mx-auto max-w-6xl px-4 sm:px-6"><h1 class="text-center font-display text-4xl font-bold text-navy-900">Harga per acara, bukan langganan</h1> <p class="mx-auto mt-3 max-w-xl text-center text-navy-500">Sekali bayar untuk satu acara. Tidak ada biaya bulanan yang jalan terus meski acaranya sudah lewat.</p> <div class="mt-12 grid gap-6 md:grid-cols-3"><!--[-->`);
+	const each_array = ensure_array_like(PLANS);
+	for (let $$index = 0, $$length = each_array.length; $$index < $$length; $$index++) {
+		let plan = each_array[$$index];
+		PlanCard($$renderer, {
+			plan,
+			highlighted: plan.id === "pro"
+		});
+	}
+	$$renderer.push(`<!--]--></div></div></section>`);
+}
+//#endregion
+export { _page as default };

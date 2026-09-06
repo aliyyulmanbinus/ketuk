@@ -1,0 +1,146 @@
+import type { EventType } from '../types/event';
+
+export interface ChecklistTemplateItem {
+	title: string;
+	/** Dipakai untuk hitung dueDate otomatis relatif ke tanggal acara saat event dibuat. */
+	daysBeforeEvent: number;
+}
+
+export interface EventTypeConfig {
+	value: EventType;
+	label: string;
+	emoji: string;
+	/** Checklist yang otomatis dibuat saat event dengan tipe ini dibuat. */
+	defaultChecklist: ChecklistTemplateItem[];
+}
+
+export const EVENT_TYPE_CONFIGS: EventTypeConfig[] = [
+	{
+		value: 'wedding',
+		label: 'Pernikahan',
+		emoji: '💍',
+		defaultChecklist: [
+			{ title: 'Survei dan booking venue', daysBeforeEvent: 180 },
+			{ title: 'Booking wedding organizer (WO)', daysBeforeEvent: 150 },
+			{ title: 'Food tasting catering', daysBeforeEvent: 120 },
+			{ title: 'Fitting busana pengantin', daysBeforeEvent: 90 },
+			{ title: 'Booking fotografer & videografer', daysBeforeEvent: 90 },
+			{ title: 'Cetak dan sebar undangan', daysBeforeEvent: 60 },
+			{ title: 'Meeting dekorasi dan konsep acara', daysBeforeEvent: 45 },
+			{ title: 'Fitting busana kedua', daysBeforeEvent: 30 },
+			{ title: 'Konfirmasi jumlah tamu final ke catering', daysBeforeEvent: 14 },
+			{ title: 'Gladi resik', daysBeforeEvent: 1 },
+		],
+	},
+	{
+		value: 'engagement',
+		label: 'Lamaran',
+		emoji: '💐',
+		defaultChecklist: [
+			{ title: 'Tentukan tanggal dan lokasi lamaran', daysBeforeEvent: 60 },
+			{ title: 'Siapkan seserahan', daysBeforeEvent: 30 },
+			{ title: 'Booking dekorasi dan catering ringan', daysBeforeEvent: 21 },
+			{ title: 'Konfirmasi daftar tamu kedua keluarga', daysBeforeEvent: 14 },
+			{ title: 'Booking fotografer', daysBeforeEvent: 14 },
+		],
+	},
+	{
+		value: 'birthday',
+		label: 'Ulang Tahun',
+		emoji: '🎂',
+		defaultChecklist: [
+			{ title: 'Tentukan tema dan konsep acara', daysBeforeEvent: 30 },
+			{ title: 'Booking venue atau dekorasi rumah', daysBeforeEvent: 21 },
+			{ title: 'Pesan kue ulang tahun', daysBeforeEvent: 14 },
+			{ title: 'Sebar undangan', daysBeforeEvent: 14 },
+			{ title: 'Siapkan games dan hiburan', daysBeforeEvent: 7 },
+			{ title: 'Konfirmasi jumlah tamu final', daysBeforeEvent: 3 },
+		],
+	},
+	{
+		value: 'khitanan',
+		label: 'Khitanan',
+		emoji: '🕌',
+		defaultChecklist: [
+			{ title: 'Booking dokter atau mantri sunat', daysBeforeEvent: 30 },
+			{ title: 'Tentukan venue (rumah atau gedung)', daysBeforeEvent: 21 },
+			{ title: 'Booking catering dan tenda', daysBeforeEvent: 14 },
+			{ title: 'Sebar undangan ke keluarga dan tetangga', daysBeforeEvent: 10 },
+			{ title: 'Siapkan baju koko dan perlengkapan anak', daysBeforeEvent: 7 },
+			{ title: 'Konfirmasi hiburan (mis. marawis atau rebana)', daysBeforeEvent: 7 },
+		],
+	},
+	{
+		value: 'aqiqah',
+		label: 'Aqiqah',
+		emoji: '🐑',
+		defaultChecklist: [
+			{ title: 'Pesan kambing aqiqah ke penyedia', daysBeforeEvent: 14 },
+			{ title: 'Tentukan tanggal sesuai kalender Hijriah', daysBeforeEvent: 14 },
+			{ title: 'Booking catering untuk olahan daging', daysBeforeEvent: 10 },
+			{ title: 'Undang ustadz untuk doa dan cukur rambut', daysBeforeEvent: 7 },
+			{ title: 'Sebar undangan ke keluarga', daysBeforeEvent: 7 },
+			{ title: 'Siapkan paket daging untuk dibagikan', daysBeforeEvent: 2 },
+		],
+	},
+	{
+		value: 'reunion',
+		label: 'Reuni',
+		emoji: '🎉',
+		defaultChecklist: [
+			{ title: 'Bentuk panitia kecil', daysBeforeEvent: 60 },
+			{ title: 'Tentukan venue dan tanggal', daysBeforeEvent: 45 },
+			{ title: 'Buat grup dan sebar undangan digital', daysBeforeEvent: 30 },
+			{ title: 'Konfirmasi jumlah peserta dan biaya patungan', daysBeforeEvent: 14 },
+			{ title: 'Booking catering/venue final', daysBeforeEvent: 10 },
+			{ title: 'Siapkan dokumentasi dan games nostalgia', daysBeforeEvent: 7 },
+		],
+	},
+	{
+		value: 'corporate',
+		label: 'Acara Perusahaan',
+		emoji: '🏢',
+		defaultChecklist: [
+			{ title: 'Tentukan tujuan dan tema acara', daysBeforeEvent: 60 },
+			{ title: 'Booking venue dan MC', daysBeforeEvent: 45 },
+			{ title: 'Siapkan rundown acara', daysBeforeEvent: 30 },
+			{ title: 'Sebar undangan ke internal dan eksternal', daysBeforeEvent: 21 },
+			{ title: 'Koordinasi sponsor/vendor pendukung', daysBeforeEvent: 14 },
+			{ title: 'Gladi bersih rundown', daysBeforeEvent: 2 },
+		],
+	},
+	{
+		value: 'syukuran',
+		label: 'Syukuran',
+		emoji: '🙏',
+		defaultChecklist: [
+			{ title: 'Tentukan tanggal dan tujuan syukuran', daysBeforeEvent: 21 },
+			{ title: 'Booking catering (nasi kotak atau prasmanan)', daysBeforeEvent: 14 },
+			{ title: 'Undang tetangga dan kerabat', daysBeforeEvent: 10 },
+			{ title: 'Siapkan tumpeng dan doa bersama', daysBeforeEvent: 3 },
+		],
+	},
+	{
+		value: 'graduation',
+		label: 'Wisuda',
+		emoji: '🎓',
+		defaultChecklist: [
+			{ title: 'Konfirmasi jadwal wisuda kampus/sekolah', daysBeforeEvent: 30 },
+			{ title: 'Booking fotografer untuk sesi wisuda', daysBeforeEvent: 21 },
+			{ title: 'Pesan bunga dan buket wisuda', daysBeforeEvent: 7 },
+			{ title: 'Rencanakan syukuran kecil setelahnya', daysBeforeEvent: 7 },
+			{ title: 'Sebar undangan ke keluarga', daysBeforeEvent: 7 },
+		],
+	},
+	{
+		value: 'other',
+		label: 'Lainnya',
+		emoji: '✨',
+		defaultChecklist: [
+			{ title: 'Tentukan konsep dan tanggal acara', daysBeforeEvent: 30 },
+			{ title: 'Booking venue', daysBeforeEvent: 21 },
+			{ title: 'Sebar undangan', daysBeforeEvent: 14 },
+			{ title: 'Konfirmasi jumlah tamu', daysBeforeEvent: 3 },
+		],
+	},
+];

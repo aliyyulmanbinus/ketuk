@@ -1,0 +1,21 @@
+import { g as listMyEvents } from "../../../../chunks/api.js";
+//#region src/routes/(app)/undangan/+page.ts
+var load = async ({ fetch, parent }) => {
+	const { accessToken } = await parent();
+	try {
+		return {
+			events: await listMyEvents({
+				fetch,
+				accessToken
+			}),
+			error: null
+		};
+	} catch {
+		return {
+			events: [],
+			error: "Koneksi terputus. Coba muat ulang."
+		};
+	}
+};
+//#endregion
+export { load };

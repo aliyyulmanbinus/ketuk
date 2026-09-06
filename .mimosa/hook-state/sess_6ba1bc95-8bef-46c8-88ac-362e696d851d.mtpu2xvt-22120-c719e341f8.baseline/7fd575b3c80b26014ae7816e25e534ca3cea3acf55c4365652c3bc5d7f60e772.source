@@ -1,0 +1,25 @@
+import type { VendorCategory } from '../types/vendor';
+
+export interface VendorCategoryConfig {
+	value: VendorCategory;
+	label: string;
+	emoji: string;
+}
+
+export const VENDOR_CATEGORY_CONFIGS: VendorCategoryConfig[] = [
+	{ value: 'katering', label: 'Katering', emoji: '🍽️' },
+	{ value: 'dekorasi', label: 'Dekorasi', emoji: '🎈' },
+	{ value: 'fotografi', label: 'Fotografi', emoji: '📷' },
+	{ value: 'videografi', label: 'Videografi', emoji: '🎥' },
+	{ value: 'florist', label: 'Florist', emoji: '💐' },
+	{ value: 'kue', label: 'Kue', emoji: '🎂' },
+	{ value: 'souvenir', label: 'Souvenir', emoji: '🎁' },
+	{ value: 'wo', label: 'Wedding Organizer', emoji: '📋' },
+	{ value: 'mc', label: 'MC', emoji: '🎤' },
+	{ value: 'hiburan', label: 'Hiburan', emoji: '🎶' },
+	{ value: 'mua', label: 'MUA (Make Up Artist)', emoji: '💄' },
+	{ value: 'venue', label: 'Venue', emoji: '🏛️' },
+	{ value: 'cetak_undangan', label: 'Cetak Undangan', emoji: '🖨️' },
+	{ value: 'busana', label: 'Busana', emoji: '👗' },
+	{ value: 'transportasi', label: 'Transportasi', emoji: '🚗' },
+];

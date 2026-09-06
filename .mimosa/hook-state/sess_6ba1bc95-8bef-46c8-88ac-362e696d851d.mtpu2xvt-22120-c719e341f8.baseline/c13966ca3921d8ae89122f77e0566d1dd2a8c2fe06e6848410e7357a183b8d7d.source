@@ -1,0 +1,56 @@
+import { a as getPlannerSummary, g as listMyEvents } from "../../../../chunks/api.js";
+import { redirect } from "@sveltejs/kit";
+//#region src/routes/(app)/planner/+page.ts
+/**
+* Planner tidak nested di bawah /undangan/[id] — dipilih lewat query `?event=`.
+* Kalau user cuma punya satu event, langsung diarahkan ke situ supaya tidak
+* perlu memilih dari daftar berisi satu item.
+*/
+var load = async ({ fetch, parent, url }) => {
+	const { accessToken } = await parent();
+	const eventId = url.searchParams.get("event");
+	let events = [];
+	try {
+		events = await listMyEvents({
+			fetch,
+			accessToken
+		});
+	} catch {
+		return {
+			events: [],
+			eventId,
+			summary: null,
+			error: "Koneksi terputus. Coba muat ulang."
+		};
+	}
+	if (!eventId) {
+		if (events.length === 1 && events[0]) throw redirect(303, `/planner?event=${events[0].id}`);
+		return {
+			events,
+			eventId: null,
+			summary: null,
+			error: null
+		};
+	}
+	try {
+		const summary = await getPlannerSummary(eventId, {
+			fetch,
+			accessToken
+		});
+		return {
+			events,
+			eventId,
+			summary,
+			error: null
+		};
+	} catch {
+		return {
+			events,
+			eventId,
+			summary: null,
+			error: "Gagal memuat ringkasan planner."
+		};
+	}
+};
+//#endregion
+export { load };

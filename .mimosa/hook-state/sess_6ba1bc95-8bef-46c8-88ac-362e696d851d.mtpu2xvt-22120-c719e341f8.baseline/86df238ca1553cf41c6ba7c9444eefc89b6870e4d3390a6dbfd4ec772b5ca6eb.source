@@ -1,0 +1,48 @@
+import { S as attr, a as ensure_array_like, l as stringify, o as head, t as attr_class, w as escape_html } from "../../../../chunks/server.js";
+//#region src/routes/(app)/dashboard/+page.svelte
+function _page($$renderer) {
+	const actions = [
+		{
+			href: "/undangan",
+			emoji: "💌",
+			bgClass: "bg-undangan-100",
+			title: "Kelola Undangan",
+			desc: "Buat undangan baru atau kelola yang sudah ada."
+		},
+		{
+			href: "/planner",
+			emoji: "📋",
+			bgClass: "bg-planner-100",
+			title: "Atur Planner",
+			desc: "Budget, checklist, dan timeline acaramu."
+		},
+		{
+			href: "/vendor",
+			emoji: "🛍️",
+			bgClass: "bg-vendor-100",
+			title: "Cari Vendor",
+			desc: "Temukan katering, dekorasi, dan vendor lainnya."
+		},
+		{
+			href: "/hadiah",
+			emoji: "🎁",
+			bgClass: "bg-hadiah-100",
+			title: "Kelola Hadiah",
+			desc: "Lihat hadiah yang masuk untuk acaramu."
+		}
+	];
+	head("1tyszyy", $$renderer, ($$renderer) => {
+		$$renderer.title(($$renderer) => {
+			$$renderer.push(`<title>Dashboard — Ketuk.id</title>`);
+		});
+	});
+	$$renderer.push(`<h1 class="font-display text-2xl font-bold text-navy-900">Mau melakukan apa?</h1> <p class="mt-1 text-navy-500">Pilih salah satu untuk mulai.</p> <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4"><!--[-->`);
+	const each_array = ensure_array_like(actions);
+	for (let $$index = 0, $$length = each_array.length; $$index < $$length; $$index++) {
+		let action = each_array[$$index];
+		$$renderer.push(`<a${attr("href", action.href)} class="flex flex-col gap-3 rounded-2xl border border-navy-100 bg-white p-6 transition-shadow hover:shadow-md"><span${attr_class(`flex h-12 w-12 items-center justify-center rounded-xl text-2xl ${stringify(action.bgClass)}`)}>${escape_html(action.emoji)}</span> <h2 class="font-display text-lg font-semibold text-navy-900">${escape_html(action.title)}</h2> <p class="text-sm text-navy-500">${escape_html(action.desc)}</p></a>`);
+	}
+	$$renderer.push(`<!--]--></div>`);
+}
+//#endregion
+export { _page as default };

@@ -1,0 +1,26 @@
+import { s as listChecklistItems } from "../../../../../chunks/api.js";
+import { redirect } from "@sveltejs/kit";
+//#region src/routes/(app)/planner/checklist/+page.ts
+var load = async ({ fetch, parent, url }) => {
+	const { accessToken } = await parent();
+	const eventId = url.searchParams.get("event");
+	if (!eventId) throw redirect(303, "/planner");
+	try {
+		return {
+			items: await listChecklistItems(eventId, {
+				fetch,
+				accessToken
+			}),
+			eventId,
+			error: null
+		};
+	} catch {
+		return {
+			items: [],
+			eventId,
+			error: "Koneksi terputus. Coba muat ulang."
+		};
+	}
+};
+//#endregion
+export { load };

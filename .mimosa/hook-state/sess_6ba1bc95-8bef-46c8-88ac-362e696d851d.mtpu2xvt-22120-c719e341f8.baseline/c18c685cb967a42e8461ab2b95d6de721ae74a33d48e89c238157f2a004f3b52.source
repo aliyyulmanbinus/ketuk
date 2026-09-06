@@ -1,0 +1,23 @@
+import { S as attr, o as head, w as escape_html } from "../../../../chunks/server.js";
+import { r as InvitationView } from "../../../../chunks/domain.js";
+//#region src/routes/(public)/[slug]/+page.svelte
+function _page($$renderer, $$props) {
+	$$renderer.component(($$renderer) => {
+		let { data } = $$props;
+		head("t7vkmj", $$renderer, ($$renderer) => {
+			$$renderer.title(($$renderer) => {
+				$$renderer.push(`<title>${escape_html(data.event.title)} — Ketuk.id</title>`);
+			});
+			$$renderer.push(`<meta property="og:title"${attr("content", data.event.title)}/> <meta property="og:description" content="Kamu diundang! Lihat detail acara dan konfirmasi kehadiranmu di sini."/> `);
+			if (data.event.coverImage) $$renderer.push(`<!--[0--><meta property="og:image"${attr("content", data.event.coverImage)}/>`);
+			else $$renderer.push("<!--[-1-->");
+			$$renderer.push(`<!--]--> <meta property="og:type" content="website"/> <meta name="twitter:card" content="summary_large_image"/>`);
+		});
+		InvitationView($$renderer, {
+			event: data.event,
+			giftProducts: data.giftProducts
+		});
+	});
+}
+//#endregion
+export { _page as default };

@@ -1,0 +1,127 @@
+import { t as public_env } from "./shared-server.js";
+//#region src/lib/api/client.ts
+var PUBLIC_API_URL = public_env.PUBLIC_API_URL ?? "";
+/** Dilempar setiap kali backend membalas `{ success: false }` — bawa kode & pesan aslinya. */
+var ApiRequestError = class extends Error {
+	code;
+	status;
+	details;
+	constructor(code, message, status, details) {
+		super(message);
+		this.code = code;
+		this.status = status;
+		this.details = details;
+		this.name = "ApiRequestError";
+	}
+};
+/**
+* Satu-satunya jalan memanggil backend — semua fungsi di lib/api/*.ts lewat sini,
+* supaya tidak ada `fetch()` mentah tersebar di komponen dan bentuk response
+* `{ success, data }` / `{ success, error }` ditangani konsisten di satu tempat.
+*/
+async function apiFetch(path, options = {}) {
+	const { method = "GET", body, accessToken, searchParams, fetch: fetchImpl = fetch } = options;
+	let url = `${PUBLIC_API_URL}${path}`;
+	if (searchParams) {
+		const qs = new URLSearchParams();
+		for (const [key, value] of Object.entries(searchParams)) if (value !== void 0) qs.set(key, String(value));
+		const qsString = qs.toString();
+		if (qsString) url += `?${qsString}`;
+	}
+	const response = await fetchImpl(url, {
+		method,
+		headers: {
+			"Content-Type": "application/json",
+			...accessToken ? { Authorization: `Bearer ${accessToken}` } : {}
+		},
+		body: body !== void 0 ? JSON.stringify(body) : void 0
+	});
+	const json = await response.json();
+	if (!json.success) throw new ApiRequestError(json.error.code, json.error.message, response.status, json.error.details);
+	return json.data;
+}
+//#endregion
+//#region src/lib/api/events.ts
+function listMyEvents(ctx = {}) {
+	return apiFetch("/api/events", ctx);
+}
+function getEvent(idOrSlug, ctx = {}) {
+	return apiFetch(`/api/events/${idOrSlug}`, ctx);
+}
+function publishEvent(id, ctx = {}) {
+	return apiFetch(`/api/events/${id}/publish`, {
+		method: "POST",
+		...ctx
+	});
+}
+//#endregion
+//#region src/lib/api/gifts.ts
+function listGiftProducts(category, ctx = {}) {
+	return apiFetch("/api/gifts/products", {
+		searchParams: { category },
+		...ctx
+	});
+}
+//#endregion
+//#region src/lib/api/guests.ts
+function listGuests(eventId, ctx = {}) {
+	return apiFetch(`/api/events/${eventId}/guests`, ctx);
+}
+function getGuestStats(eventId, ctx = {}) {
+	return apiFetch(`/api/events/${eventId}/guests/stats`, ctx);
+}
+function deleteGuest(eventId, guestId, ctx = {}) {
+	return apiFetch(`/api/events/${eventId}/guests/${guestId}`, {
+		method: "DELETE",
+		...ctx
+	});
+}
+function listWishes(eventSlug, ctx = {}) {
+	return apiFetch(`/api/events/${eventSlug}/wishes`, ctx);
+}
+//#endregion
+//#region src/lib/api/planner.ts
+function getPlannerSummary(eventId, ctx = {}) {
+	return apiFetch(`/api/events/${eventId}/planner/summary`, ctx);
+}
+function listBudgetItems(eventId, ctx = {}) {
+	return apiFetch(`/api/events/${eventId}/planner/budget`, ctx);
+}
+function deleteBudgetItem(eventId, itemId, ctx = {}) {
+	return apiFetch(`/api/events/${eventId}/planner/budget/${itemId}`, {
+		method: "DELETE",
+		...ctx
+	});
+}
+function listChecklistItems(eventId, ctx = {}) {
+	return apiFetch(`/api/events/${eventId}/planner/checklist`, ctx);
+}
+function updateChecklistItem(eventId, itemId, input, ctx = {}) {
+	return apiFetch(`/api/events/${eventId}/planner/checklist/${itemId}`, {
+		method: "PATCH",
+		body: input,
+		...ctx
+	});
+}
+function deleteChecklistItem(eventId, itemId, ctx = {}) {
+	return apiFetch(`/api/events/${eventId}/planner/checklist/${itemId}`, {
+		method: "DELETE",
+		...ctx
+	});
+}
+function listTimelineItems(eventId, ctx = {}) {
+	return apiFetch(`/api/events/${eventId}/planner/timeline`, ctx);
+}
+//#endregion
+//#region src/lib/api/vendors.ts
+function listVendors(params = {}, ctx = {}) {
+	return apiFetch("/api/vendors", {
+		searchParams: { ...params },
+		...ctx
+	});
+}
+function getVendor(slug, ctx = {}) {
+	return apiFetch(`/api/vendors/${slug}`, ctx);
+}
+//#endregion
+export { publishEvent as _, getPlannerSummary as a, listTimelineItems as c, getGuestStats as d, listGuests as f, listMyEvents as g, getEvent as h, deleteChecklistItem as i, updateChecklistItem as l, listGiftProducts as m, listVendors as n, listBudgetItems as o, listWishes as p, deleteBudgetItem as r, listChecklistItems as s, getVendor as t, deleteGuest as u };

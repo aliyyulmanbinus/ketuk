@@ -1,0 +1,10 @@
+import * as server from '../entries/pages/(auth)/_layout.server.ts.js';
+
+export const index = 4;
+let component_cache;
+export const component = async () => component_cache ??= (await import('../entries/pages/(auth)/_layout.svelte.js')).default;
+export { server };
+export const server_id = "src/routes/(auth)/+layout.server.ts";
+export const imports = ["_app/immutable/nodes/4.BFmSNmFc.js","_app/immutable/chunks/BXjcv6Yd.js","_app/immutable/chunks/xihTtKlq.js"];
+export const stylesheets = [];
+export const fonts = [];

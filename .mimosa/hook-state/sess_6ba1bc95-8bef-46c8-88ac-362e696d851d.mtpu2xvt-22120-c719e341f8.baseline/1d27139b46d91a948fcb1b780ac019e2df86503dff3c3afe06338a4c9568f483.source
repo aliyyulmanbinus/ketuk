@@ -1,0 +1,10 @@
+import * as universal from '../entries/pages/(app)/vendor/_page.ts.js';
+
+export const index = 19;
+let component_cache;
+export const component = async () => component_cache ??= (await import('../entries/pages/(app)/vendor/_page.svelte.js')).default;
+export { universal };
+export const universal_id = "src/routes/(app)/vendor/+page.ts";
+export const imports = ["_app/immutable/nodes/19.DGrWp9bm.js","_app/immutable/chunks/BXjcv6Yd.js","_app/immutable/chunks/BgNd3R7i.js","_app/immutable/chunks/Dt-HX3Vu.js","_app/immutable/chunks/xihTtKlq.js","_app/immutable/chunks/CXwT2CbZ.js","_app/immutable/chunks/Cz3j_UsG.js","_app/immutable/chunks/8xT1Z8Ng.js","_app/immutable/chunks/LgPvg1cN.js","_app/immutable/chunks/CkiFVLo2.js","_app/immutable/chunks/CNXsb0hC.js","_app/immutable/chunks/BqQR83Z3.js","_app/immutable/chunks/CNEzvZkw.js","_app/immutable/chunks/YA22jAHV.js","_app/immutable/chunks/DXsGvWiL.js","_app/immutable/chunks/Bdn8o-iY.js","_app/immutable/chunks/BsD59cNl.js","_app/immutable/chunks/BZxDoonX.js"];
+export const stylesheets = [];
+export const fonts = [];

@@ -1,0 +1,46 @@
+//#region ../packages/shared/dist/utils/date.js
+var JAKARTA_TIMEZONE = "Asia/Jakarta";
+/** Format tanggal acara jadi bentuk panjang berbahasa Indonesia, mis. "Sabtu, 15 Maret 2027". */
+function formatEventDate(iso) {
+	return new Intl.DateTimeFormat("id-ID", {
+		weekday: "long",
+		day: "numeric",
+		month: "long",
+		year: "numeric",
+		timeZone: JAKARTA_TIMEZONE
+	}).format(new Date(iso));
+}
+/**
+* Format jam acara, mis. "14:00" -> "14.00 WIB". Input berupa string jam lokal
+* venue (bukan timestamp), jadi tidak ada konversi timezone di sini — venue di luar
+* Jakarta tetap ditampilkan sesuai jam yang diinput host, dengan label WIB sebagai
+* konvensi produk untuk saat ini.
+*/
+function formatEventTime(time) {
+	const [hour, minute] = time.split(":");
+	return `${hour}.${minute} WIB`;
+}
+/**
+* Hitung mundur ke tanggal ISO tertentu. `isPast` jadi true begitu waktunya lewat,
+* supaya UI bisa ganti tampilan dari "countdown" ke "acara sudah berlangsung"
+* tanpa harus menangani angka negatif yang membingungkan.
+*/
+function getCountdown(iso) {
+	const diff = new Date(iso).getTime() - Date.now();
+	if (diff <= 0) return {
+		days: 0,
+		hours: 0,
+		minutes: 0,
+		seconds: 0,
+		isPast: true
+	};
+	return {
+		days: Math.floor(diff / 864e5),
+		hours: Math.floor(diff / 36e5 % 24),
+		minutes: Math.floor(diff / 6e4 % 60),
+		seconds: Math.floor(diff / 1e3 % 60),
+		isPast: false
+	};
+}
+//#endregion
+export { formatEventTime as n, getCountdown as r, formatEventDate as t };

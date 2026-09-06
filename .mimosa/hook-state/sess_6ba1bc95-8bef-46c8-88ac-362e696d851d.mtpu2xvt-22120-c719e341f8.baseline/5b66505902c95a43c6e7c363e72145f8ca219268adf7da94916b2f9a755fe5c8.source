@@ -1,0 +1,17 @@
+import { c as store_get, o as head, u as unsubscribe_stores, w as escape_html } from "../../chunks/server.js";
+import { t as page } from "../../chunks/stores.js";
+//#region src/routes/+error.svelte
+function _error($$renderer, $$props) {
+	$$renderer.component(($$renderer) => {
+		var $$store_subs;
+		head("1j96wlh", $$renderer, ($$renderer) => {
+			$$renderer.title(($$renderer) => {
+				$$renderer.push(`<title>${escape_html(store_get($$store_subs ??= {}, "$page", page).status)} — Ketuk.id</title>`);
+			});
+		});
+		$$renderer.push(`<div class="flex min-h-screen flex-col items-center justify-center gap-4 bg-navy-50 px-6 text-center"><p class="font-display text-6xl font-bold text-navy-200">${escape_html(store_get($$store_subs ??= {}, "$page", page).status)}</p> <h1 class="font-display text-2xl font-semibold text-navy-900">${escape_html(store_get($$store_subs ??= {}, "$page", page).status === 404 ? "Halaman tidak ditemukan" : "Terjadi kesalahan")}</h1> <p class="max-w-sm text-navy-500">${escape_html(store_get($$store_subs ??= {}, "$page", page).error?.message ?? "Sesuatu tidak berjalan seperti seharusnya. Coba muat ulang halaman.")}</p> <a href="/" class="mt-2 text-sm font-medium text-coral-500 hover:underline">Kembali ke beranda</a></div>`);
+		if ($$store_subs) unsubscribe_stores($$store_subs);
+	});
+}
+//#endregion
+export { _error as default };

@@ -47,7 +47,44 @@
 	--color-planner-200: #bae6fd;
 	--color-hadiah-200: #fed7aa;
 
-	--font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+	--color-wine-950: #2d070f;
+	--color-wine-900: #460d17;
+	--color-wine-800: #5c1421;
+	--color-wine-700: #6f1929;
+	--color-wine-600: #882235;
+	--color-wine-500: #a42c43;
+	--color-wine-400: #c14b62;
+	--color-wine-200: #e8a8b5;
+	--color-wine-100: #f7dbe1;
+	--color-wine-50: #fdf5f6;
+
+	--color-cream-900: #423832;
+	--color-cream-800: #5e524a;
+	--color-cream-700: #7e6f65;
+	--color-cream-400: #b5a497;
+	--color-cream-300: #cfc1b5;
+	--color-cream-200: #e5dbd0;
+	--color-cream-150: #ede4db;
+	--color-cream-100: #f4ede4;
+	--color-cream-50: #faf7f2;
+
+	--color-champagne-700: #8c6a3e;
+	--color-champagne-600: #a98350;
+	--color-champagne-500: #c5a478;
+	--color-champagne-400: #d6bc98;
+	--color-champagne-200: #ebddc9;
+	--color-champagne-100: #f6efe4;
+
+	--color-espresso-950: #191412;
+	--color-espresso-900: #26201e;
+	--color-espresso-800: #3a322f;
+	--color-espresso-700: #544945;
+	--color-espresso-600: #70635e;
+	--color-espresso-500: #8d7e78;
+	--color-espresso-400: #aba09b;
+
+	--font-serif: "Cormorant Garamond", Georgia, serif;
+	--font-display: "Montserrat", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 	--font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 

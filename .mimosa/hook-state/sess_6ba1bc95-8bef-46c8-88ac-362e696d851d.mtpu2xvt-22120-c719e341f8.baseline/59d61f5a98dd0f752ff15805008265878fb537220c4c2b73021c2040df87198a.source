@@ -1,0 +1,14 @@
+import "../../chunks/server.js";
+import { r as ConfirmDialog, t as Toast } from "../../chunks/ui.js";
+//#region src/routes/+layout.svelte
+function _layout($$renderer, $$props) {
+	let { children } = $$props;
+	children($$renderer);
+	$$renderer.push(`<!----> `);
+	Toast($$renderer, {});
+	$$renderer.push(`<!----> `);
+	ConfirmDialog($$renderer, {});
+	$$renderer.push(`<!---->`);
+}
+//#endregion
+export { _layout as default };

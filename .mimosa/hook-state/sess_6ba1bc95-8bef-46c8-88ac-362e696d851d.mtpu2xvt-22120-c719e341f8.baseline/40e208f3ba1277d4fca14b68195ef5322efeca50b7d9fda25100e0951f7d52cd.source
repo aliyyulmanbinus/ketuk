@@ -1,0 +1,9 @@
+import { t as public_env } from "./shared-server.js";
+import { createBrowserClient } from "@supabase/ssr";
+//#region src/lib/supabase/client.ts
+/** Client Supabase sisi browser — session-nya disimpan di cookie (via @supabase/ssr), bukan localStorage. */
+function createSupabaseBrowserClient() {
+	return createBrowserClient(public_env.PUBLIC_SUPABASE_URL ?? "", public_env.PUBLIC_SUPABASE_ANON_KEY ?? "");
+}
+//#endregion
+export { createSupabaseBrowserClient as t };

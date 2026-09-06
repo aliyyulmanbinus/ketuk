@@ -1,0 +1,23 @@
+// @ts-nocheck
+import type { Guest } from '@ketuk/shared';
+import type { GuestStat } from '$lib/api';
+import { getGuestStats, listGuests } from '$lib/api';
+import type { PageLoad } from './$types';
+
+export const load = async ({ fetch, parent, params }: Parameters<PageLoad>[0]) => {
+	const { accessToken } = await parent();
+
+	try {
+		const [guests, stats] = await Promise.all([
+			listGuests(params.id, { fetch, accessToken }),
+			getGuestStats(params.id, { fetch, accessToken }),
+		]);
+		return { guests, stats, error: null };
+	} catch {
+		return {
+			guests: [] as Guest[],
+			stats: [] as GuestStat[],
+			error: 'Koneksi terputus. Coba muat ulang.',
+		};
+	}
+};

@@ -1,0 +1,86 @@
+import { c as store_get, l as stringify, o as head, u as unsubscribe_stores, w as escape_html } from "../../../../../chunks/server.js";
+import { c as Badge, s as Button } from "../../../../../chunks/Textarea.js";
+import "../../../../../chunks/ui.js";
+import { t as confirmDialog } from "../../../../../chunks/confirm.svelte.js";
+import { n as pushToast } from "../../../../../chunks/toast.svelte.js";
+import { t as invalidateAll } from "../../../../../chunks/client.js";
+import { t as page } from "../../../../../chunks/stores.js";
+import "../../../../../chunks/navigation.js";
+import { _ as publishEvent } from "../../../../../chunks/api.js";
+import "../../../../../chunks/dist.js";
+import { t as formatEventDate } from "../../../../../chunks/date.js";
+//#region src/routes/(app)/undangan/[id]/+page.svelte
+function _page($$renderer, $$props) {
+	$$renderer.component(($$renderer) => {
+		var $$store_subs;
+		let { data } = $$props;
+		let publishing = false;
+		async function handlePublish() {
+			if (!await confirmDialog({
+				title: "Publikasikan undangan?",
+				message: "Undangan akan bisa diakses publik lewat link-nya begitu dipublikasikan."
+			})) return;
+			publishing = true;
+			try {
+				await publishEvent(data.event.id, { accessToken: store_get($$store_subs ??= {}, "$page", page).data.accessToken });
+				pushToast("Undangan dipublikasikan.", "success");
+				await invalidateAll();
+			} catch {
+				pushToast("Gagal publikasikan — lengkapi tanggal dan lokasi/venue dulu.", "error");
+			} finally {
+				publishing = false;
+			}
+		}
+		head("lln7u4", $$renderer, ($$renderer) => {
+			$$renderer.title(($$renderer) => {
+				$$renderer.push(`<title>${escape_html(data.event.title)} — Ketuk.id</title>`);
+			});
+		});
+		$$renderer.push(`<div class="grid gap-6 lg:grid-cols-3"><div class="flex flex-col gap-4 rounded-xl border border-navy-100 bg-white p-6 lg:col-span-2"><div class="flex items-center justify-between"><h2 class="font-display text-lg font-semibold text-navy-900">Info Acara</h2> `);
+		Badge($$renderer, {
+			tone: data.event.isPublished ? "success" : "neutral",
+			children: ($$renderer) => {
+				$$renderer.push(`<!---->${escape_html(data.event.isPublished ? "Terbit" : "Draf")}`);
+			},
+			$$slots: { default: true }
+		});
+		$$renderer.push(`<!----></div> <dl class="grid gap-4 text-sm sm:grid-cols-2"><div><dt class="text-navy-400">Tanggal</dt> <dd class="text-navy-900">${escape_html(data.event.date ? formatEventDate(data.event.date) : "Belum diatur")}</dd></div> <div><dt class="text-navy-400">Lokasi</dt> <dd class="text-navy-900">${escape_html(data.event.venue ?? data.event.location ?? "Belum diatur")}</dd></div> <div><dt class="text-navy-400">Alamat undangan</dt> <dd class="text-navy-900">ketuk.id/${escape_html(data.event.slug)}</dd></div> <div><dt class="text-navy-400">Dilihat</dt> <dd class="text-navy-900">${escape_html(data.event.viewCount)}x</dd></div></dl></div> <div class="flex flex-col gap-3 rounded-xl border border-navy-100 bg-white p-6"><h2 class="font-display text-lg font-semibold text-navy-900">Aksi</h2> `);
+		if (!data.event.isPublished) {
+			$$renderer.push("<!--[0-->");
+			Button($$renderer, {
+				onclick: handlePublish,
+				loading: publishing,
+				fullWidth: true,
+				children: ($$renderer) => {
+					$$renderer.push(`<!---->Publikasikan`);
+				},
+				$$slots: { default: true }
+			});
+		} else {
+			$$renderer.push("<!--[-1-->");
+			Button($$renderer, {
+				href: `/${stringify(data.event.slug)}`,
+				variant: "secondary",
+				fullWidth: true,
+				children: ($$renderer) => {
+					$$renderer.push(`<!---->Lihat Undangan`);
+				},
+				$$slots: { default: true }
+			});
+		}
+		$$renderer.push(`<!--]--> `);
+		Button($$renderer, {
+			href: `/undangan/${stringify(data.event.id)}/edit`,
+			variant: "ghost",
+			fullWidth: true,
+			children: ($$renderer) => {
+				$$renderer.push(`<!---->Edit Undangan`);
+			},
+			$$slots: { default: true }
+		});
+		$$renderer.push(`<!----></div></div>`);
+		if ($$store_subs) unsubscribe_stores($$store_subs);
+	});
+}
+//#endregion
+export { _page as default };

@@ -1,0 +1,33 @@
+import "./server.js";
+//#region src/lib/stores/confirm.svelte.ts
+var state = {
+	open: false,
+	title: "",
+	message: "",
+	confirmLabel: "Ya, lanjutkan",
+	cancelLabel: "Batal",
+	danger: false
+};
+var pendingResolve = null;
+function getConfirmState() {
+	return state;
+}
+/** Panggil `await confirmDialog({...})` dari mana saja — resolve `true` kalau user menekan konfirmasi. */
+function confirmDialog(options) {
+	return new Promise((resolve) => {
+		state.open = true;
+		state.title = options.title;
+		state.message = options.message;
+		state.confirmLabel = options.confirmLabel ?? "Ya, lanjutkan";
+		state.cancelLabel = options.cancelLabel ?? "Batal";
+		state.danger = options.danger ?? false;
+		pendingResolve = resolve;
+	});
+}
+function resolveConfirm(value) {
+	state.open = false;
+	pendingResolve?.(value);
+	pendingResolve = null;
+}
+//#endregion
+export { getConfirmState as n, resolveConfirm as r, confirmDialog as t };

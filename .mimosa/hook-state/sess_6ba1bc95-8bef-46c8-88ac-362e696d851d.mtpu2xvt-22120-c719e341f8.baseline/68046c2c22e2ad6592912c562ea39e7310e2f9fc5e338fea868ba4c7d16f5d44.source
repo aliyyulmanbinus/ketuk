@@ -1,0 +1,27 @@
+import { a as ensure_array_like, w as escape_html } from "../../../../../../chunks/server.js";
+import "../../../../../../chunks/confirm.svelte.js";
+import "../../../../../../chunks/toast.svelte.js";
+import "../../../../../../chunks/navigation.js";
+import { t as createSupabaseBrowserClient } from "../../../../../../chunks/client2.js";
+//#region src/routes/(app)/undangan/[id]/ucapan/+page.svelte
+function _page($$renderer, $$props) {
+	$$renderer.component(($$renderer) => {
+		let { data } = $$props;
+		createSupabaseBrowserClient();
+		$$renderer.push(`<h2 class="font-display text-lg font-semibold text-navy-900">Moderasi Ucapan</h2> <p class="mt-1 text-sm text-navy-500">Hapus ucapan yang tidak pantas. Tamu tetap bisa melihat sisanya di halaman undangan.</p> <div class="mt-6">`);
+		if (data.error) $$renderer.push(`<!--[0--><p class="rounded-lg bg-red-50 p-4 text-sm text-red-600">${escape_html(data.error)}</p>`);
+		else if (data.wishes.length === 0) $$renderer.push(`<!--[1--><p class="text-sm text-navy-400">Belum ada ucapan masuk.</p>`);
+		else {
+			$$renderer.push(`<!--[-1--><ul class="flex flex-col gap-3"><!--[-->`);
+			const each_array = ensure_array_like(data.wishes);
+			for (let $$index = 0, $$length = each_array.length; $$index < $$length; $$index++) {
+				let wish = each_array[$$index];
+				$$renderer.push(`<li class="flex items-start justify-between gap-4 rounded-xl border border-navy-100 bg-white p-4"><div><p class="font-medium text-navy-900">${escape_html(wish.name)}</p> <p class="mt-1 text-sm text-navy-600">${escape_html(wish.message)}</p></div> <button type="button" class="shrink-0 text-sm text-red-500 hover:text-red-700">Hapus</button></li>`);
+			}
+			$$renderer.push(`<!--]--></ul>`);
+		}
+		$$renderer.push(`<!--]--></div>`);
+	});
+}
+//#endregion
+export { _page as default };

@@ -1,0 +1,27 @@
+import { d as getGuestStats, f as listGuests } from "../../../../../../chunks/api.js";
+//#region src/routes/(app)/undangan/[id]/tamu/+page.ts
+var load = async ({ fetch, parent, params }) => {
+	const { accessToken } = await parent();
+	try {
+		const [guests, stats] = await Promise.all([listGuests(params.id, {
+			fetch,
+			accessToken
+		}), getGuestStats(params.id, {
+			fetch,
+			accessToken
+		})]);
+		return {
+			guests,
+			stats,
+			error: null
+		};
+	} catch {
+		return {
+			guests: [],
+			stats: [],
+			error: "Koneksi terputus. Coba muat ulang."
+		};
+	}
+};
+//#endregion
+export { load };

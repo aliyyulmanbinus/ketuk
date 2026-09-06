@@ -1,0 +1,79 @@
+
+// this file is generated — do not edit it
+
+
+declare module "svelte/elements" {
+	export interface HTMLAttributes<T> {
+		'data-sveltekit-keepfocus'?: true | '' | 'off' | undefined | null;
+		'data-sveltekit-noscroll'?: true | '' | 'off' | undefined | null;
+		'data-sveltekit-preload-code'?:
+			| true
+			| ''
+			| 'eager'
+			| 'viewport'
+			| 'hover'
+			| 'tap'
+			| 'off'
+			| undefined
+			| null;
+		'data-sveltekit-preload-data'?: true | '' | 'hover' | 'tap' | 'off' | undefined | null;
+		'data-sveltekit-reload'?: true | '' | 'off' | undefined | null;
+		'data-sveltekit-replacestate'?: true | '' | 'off' | undefined | null;
+	}
+}
+
+export {};
+
+
+declare module "$app/types" {
+	type MatcherParam<M> = M extends (param : string) => param is (infer U extends string) ? U : string;
+
+	export interface AppTypes {
+		RouteId(): "/(public)" | "/(marketing)" | "/(auth)" | "/(app)" | "/" | "/(auth)/callback" | "/(auth)/daftar" | "/(app)/dashboard" | "/(app)/hadiah" | "/(app)/hadiah/[id]" | "/(marketing)/harga" | "/(auth)/masuk" | "/(app)/planner" | "/(app)/planner/budget" | "/(app)/planner/checklist" | "/(app)/planner/timeline" | "/(marketing)/template" | "/(marketing)/tentang" | "/(app)/undangan" | "/(app)/undangan/baru" | "/(app)/undangan/[id]" | "/(app)/undangan/[id]/edit" | "/(app)/undangan/[id]/tamu" | "/(app)/undangan/[id]/ucapan" | "/(app)/vendor" | "/(app)/vendor/[slug]" | "/(public)/[slug]" | "/(public)/[slug]/tamu" | "/(public)/[slug]/tamu/[guestSlug]";
+		RouteParams(): {
+			"/(app)/hadiah/[id]": { id: string };
+			"/(app)/undangan/[id]": { id: string };
+			"/(app)/undangan/[id]/edit": { id: string };
+			"/(app)/undangan/[id]/tamu": { id: string };
+			"/(app)/undangan/[id]/ucapan": { id: string };
+			"/(app)/vendor/[slug]": { slug: string };
+			"/(public)/[slug]": { slug: string };
+			"/(public)/[slug]/tamu": { slug: string };
+			"/(public)/[slug]/tamu/[guestSlug]": { slug: string; guestSlug: string }
+		};
+		LayoutParams(): {
+			"/(public)": { slug?: string | undefined; guestSlug?: string | undefined };
+			"/(marketing)": Record<string, never>;
+			"/(auth)": Record<string, never>;
+			"/(app)": { id?: string | undefined; slug?: string | undefined };
+			"/": { id?: string | undefined; slug?: string | undefined; guestSlug?: string | undefined };
+			"/(auth)/callback": Record<string, never>;
+			"/(auth)/daftar": Record<string, never>;
+			"/(app)/dashboard": Record<string, never>;
+			"/(app)/hadiah": { id?: string | undefined };
+			"/(app)/hadiah/[id]": { id: string };
+			"/(marketing)/harga": Record<string, never>;
+			"/(auth)/masuk": Record<string, never>;
+			"/(app)/planner": Record<string, never>;
+			"/(app)/planner/budget": Record<string, never>;
+			"/(app)/planner/checklist": Record<string, never>;
+			"/(app)/planner/timeline": Record<string, never>;
+			"/(marketing)/template": Record<string, never>;
+			"/(marketing)/tentang": Record<string, never>;
+			"/(app)/undangan": { id?: string | undefined };
+			"/(app)/undangan/baru": Record<string, never>;
+			"/(app)/undangan/[id]": { id: string };
+			"/(app)/undangan/[id]/edit": { id: string };
+			"/(app)/undangan/[id]/tamu": { id: string };
+			"/(app)/undangan/[id]/ucapan": { id: string };
+			"/(app)/vendor": { slug?: string | undefined };
+			"/(app)/vendor/[slug]": { slug: string };
+			"/(public)/[slug]": { slug: string; guestSlug?: string | undefined };
+			"/(public)/[slug]/tamu": { slug: string; guestSlug?: string | undefined };
+			"/(public)/[slug]/tamu/[guestSlug]": { slug: string; guestSlug: string }
+		};
+		Pathname(): "/" | "/callback" | "/daftar" | "/dashboard" | "/hadiah" | `/hadiah/${string}` & {} | "/harga" | "/masuk" | "/planner" | "/planner/budget" | "/planner/checklist" | "/planner/timeline" | "/template" | "/tentang" | "/undangan" | "/undangan/baru" | `/undangan/${string}` & {} | `/undangan/${string}/edit` & {} | `/undangan/${string}/tamu` & {} | `/undangan/${string}/ucapan` & {} | "/vendor" | `/vendor/${string}` & {} | `/${string}` & {} | `/${string}/tamu/${string}` & {};
+		ResolvedPathname(): `${"" | `/${string}`}${ReturnType<AppTypes['Pathname']>}`;
+		Asset(): string & {};
+	}
+}

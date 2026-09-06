@@ -1,0 +1,3 @@
+import * as universal from "../../../../src/routes/(app)/undangan/[id]/ucapan/+page.ts";
+export { universal };
+export { default as component } from "../../../../src/routes/(app)/undangan/[id]/ucapan/+page.svelte";

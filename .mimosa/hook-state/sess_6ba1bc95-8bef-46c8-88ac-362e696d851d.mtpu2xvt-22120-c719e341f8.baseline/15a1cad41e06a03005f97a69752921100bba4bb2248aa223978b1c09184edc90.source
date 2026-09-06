@@ -1,0 +1,836 @@
+import { S as attr, a as ensure_array_like, i as derived, l as stringify, t as attr_class, w as escape_html } from "./server.js";
+import { a as Input, c as Badge, i as Modal, n as Skeleton, o as EmptyState, r as Select, s as Button, t as Textarea } from "./Textarea.js";
+import "./toast.svelte.js";
+import { p as listWishes } from "./api.js";
+import { t as EVENT_TYPE_CONFIGS } from "./event-types.js";
+import { t as VENDOR_CATEGORY_CONFIGS } from "./vendor-categories.js";
+import "./dist.js";
+import { n as formatEventTime, r as getCountdown, t as formatEventDate } from "./date.js";
+import { t as formatRupiah } from "./format.js";
+//#region ../packages/shared/dist/constants/payment-methods.js
+var PAYMENT_METHODS = [
+	{
+		code: "SP",
+		label: "QRIS",
+		type: "qris",
+		logo: "/images/payment/qris.svg"
+	},
+	{
+		code: "BC",
+		label: "BCA Virtual Account",
+		type: "va",
+		logo: "/images/payment/bca-va.svg"
+	},
+	{
+		code: "I1",
+		label: "BNI Virtual Account",
+		type: "va",
+		logo: "/images/payment/bni-va.svg"
+	},
+	{
+		code: "BR",
+		label: "BRI Virtual Account",
+		type: "va",
+		logo: "/images/payment/bri-va.svg"
+	},
+	{
+		code: "M2",
+		label: "Mandiri Virtual Account",
+		type: "va",
+		logo: "/images/payment/mandiri-va.svg"
+	},
+	{
+		code: "BT",
+		label: "Permata Virtual Account",
+		type: "va",
+		logo: "/images/payment/permata-va.svg"
+	},
+	{
+		code: "OV",
+		label: "OVO",
+		type: "ewallet",
+		logo: "/images/payment/ovo.svg"
+	},
+	{
+		code: "SA",
+		label: "ShopeePay",
+		type: "ewallet",
+		logo: "/images/payment/shopeepay.svg"
+	},
+	{
+		code: "DA",
+		label: "DANA",
+		type: "ewallet",
+		logo: "/images/payment/dana.svg"
+	}
+];
+//#endregion
+//#region src/lib/components/domain/BudgetTable.svelte
+function BudgetTable($$renderer, $$props) {
+	$$renderer.component(($$renderer) => {
+		let { items, onEdit, onDelete } = $$props;
+		if (items.length === 0) {
+			$$renderer.push("<!--[0-->");
+			EmptyState($$renderer, {
+				icon: "💰",
+				title: "Belum ada rencana anggaran",
+				description: "Tambah item budget pertamamu."
+			});
+		} else {
+			$$renderer.push(`<!--[-1--><div class="overflow-x-auto rounded-xl border border-navy-100"><table class="w-full min-w-[600px] text-sm"><thead class="bg-navy-50 text-left text-navy-500"><tr><th class="px-4 py-3 font-medium">Item</th><th class="px-4 py-3 font-medium">Kategori</th><th class="px-4 py-3 font-medium">Estimasi</th><th class="px-4 py-3 font-medium">Aktual</th><th class="px-4 py-3 font-medium">Status</th><th class="px-4 py-3 font-medium"><span class="sr-only">Aksi</span></th></tr></thead><tbody class="divide-y divide-navy-100"><!--[-->`);
+			const each_array = ensure_array_like(items);
+			for (let $$index = 0, $$length = each_array.length; $$index < $$length; $$index++) {
+				let item = each_array[$$index];
+				$$renderer.push(`<tr><td class="px-4 py-3 font-medium text-navy-900">${escape_html(item.name)}</td><td class="px-4 py-3 text-navy-500">${escape_html(item.category)}</td><td class="px-4 py-3 text-navy-700">${escape_html(formatRupiah(item.estimated))}</td><td class="px-4 py-3 text-navy-700">${escape_html(item.actual !== null ? formatRupiah(item.actual) : "–")}</td><td class="px-4 py-3">`);
+				Badge($$renderer, {
+					tone: item.isPaid ? "success" : "warning",
+					children: ($$renderer) => {
+						$$renderer.push(`<!---->${escape_html(item.isPaid ? "Lunas" : "Belum")}`);
+					},
+					$$slots: { default: true }
+				});
+				$$renderer.push(`<!----></td><td class="px-4 py-3 text-right whitespace-nowrap"><button type="button" class="text-navy-400 hover:text-navy-700">Ubah</button> <button type="button" class="ml-3 text-navy-400 hover:text-red-600">Hapus</button></td></tr>`);
+			}
+			$$renderer.push(`<!--]--></tbody></table></div>`);
+		}
+		$$renderer.push(`<!--]-->`);
+	});
+}
+//#endregion
+//#region src/lib/components/domain/ChecklistList.svelte
+function ChecklistList($$renderer, $$props) {
+	$$renderer.component(($$renderer) => {
+		let { items, onToggle, onDelete } = $$props;
+		if (items.length === 0) {
+			$$renderer.push("<!--[0-->");
+			EmptyState($$renderer, {
+				icon: "✅",
+				title: "Belum ada checklist",
+				description: "Checklist default otomatis dibuat sesuai jenis acara saat event dibuat."
+			});
+		} else {
+			$$renderer.push(`<!--[-1--><ul class="flex flex-col divide-y divide-navy-100 rounded-xl border border-navy-100"><!--[-->`);
+			const each_array = ensure_array_like(items);
+			for (let $$index = 0, $$length = each_array.length; $$index < $$length; $$index++) {
+				let item = each_array[$$index];
+				$$renderer.push(`<li class="flex items-center gap-3 px-4 py-3"><input type="checkbox"${attr("checked", item.isDone, true)} class="h-4 w-4 rounded border-navy-300 text-coral-500 focus-visible:outline-2"/> <span${attr_class(`flex-1 text-sm ${item.isDone ? "text-navy-400 line-through" : "text-navy-900"}`)}>${escape_html(item.title)}</span> `);
+				if (item.dueDate) $$renderer.push(`<!--[0--><span class="text-xs text-navy-400">${escape_html(item.dueDate)}</span>`);
+				else $$renderer.push("<!--[-1-->");
+				$$renderer.push(`<!--]--> <button type="button" class="text-navy-300 hover:text-red-600" aria-label="Hapus item checklist">✕</button></li>`);
+			}
+			$$renderer.push(`<!--]--></ul>`);
+		}
+		$$renderer.push(`<!--]-->`);
+	});
+}
+//#endregion
+//#region src/lib/components/domain/CountdownTimer.svelte
+function CountdownTimer($$renderer, $$props) {
+	$$renderer.component(($$renderer) => {
+		/** ISO 8601 */
+		let { date } = $$props;
+		let countdown = getCountdown(date);
+		const units = derived(() => [
+			{
+				label: "Hari",
+				value: countdown.days
+			},
+			{
+				label: "Jam",
+				value: countdown.hours
+			},
+			{
+				label: "Menit",
+				value: countdown.minutes
+			},
+			{
+				label: "Detik",
+				value: countdown.seconds
+			}
+		]);
+		if (countdown.isPast) $$renderer.push(`<!--[0--><p class="text-center text-lg font-medium text-white">Acara sudah berlangsung 🎉</p>`);
+		else {
+			$$renderer.push(`<!--[-1--><div class="flex justify-center gap-3 sm:gap-6"><!--[-->`);
+			const each_array = ensure_array_like(units());
+			for (let $$index = 0, $$length = each_array.length; $$index < $$length; $$index++) {
+				let unit = each_array[$$index];
+				$$renderer.push(`<div class="flex flex-col items-center"><span class="font-display text-3xl font-bold text-white sm:text-4xl">${escape_html(String(unit.value).padStart(2, "0"))}</span> <span class="text-xs text-white/70">${escape_html(unit.label)}</span></div>`);
+			}
+			$$renderer.push(`<!--]--></div>`);
+		}
+		$$renderer.push(`<!--]-->`);
+	});
+}
+//#endregion
+//#region src/lib/components/domain/EventCard.svelte
+function EventCard($$renderer, $$props) {
+	$$renderer.component(($$renderer) => {
+		let { event } = $$props;
+		const config = derived(() => EVENT_TYPE_CONFIGS.find((c) => c.value === event.type));
+		$$renderer.push(`<a${attr("href", `/undangan/${stringify(event.id)}`)} class="flex flex-col gap-3 rounded-xl border border-navy-100 bg-white p-5 transition-shadow hover:shadow-md"><div class="flex items-start justify-between gap-2"><div><p class="text-2xl" aria-hidden="true">${escape_html(config()?.emoji ?? "✨")}</p> <h3 class="mt-1 font-display text-lg font-semibold text-navy-900">${escape_html(event.title)}</h3></div> `);
+		Badge($$renderer, {
+			tone: event.isPublished ? "success" : "neutral",
+			children: ($$renderer) => {
+				$$renderer.push(`<!---->${escape_html(event.isPublished ? "Terbit" : "Draf")}`);
+			},
+			$$slots: { default: true }
+		});
+		$$renderer.push(`<!----></div> <p class="text-sm text-navy-500">${escape_html(event.date ? formatEventDate(event.date) : "Tanggal belum diatur")}</p> <p class="text-xs text-navy-400">ketuk.id/${escape_html(event.slug)}</p></a>`);
+	});
+}
+//#endregion
+//#region src/lib/components/domain/GuestTable.svelte
+function GuestTable($$renderer, $$props) {
+	$$renderer.component(($$renderer) => {
+		let { guests, onEdit, onDelete } = $$props;
+		const statusLabel = {
+			pending: "Menunggu",
+			attending: "Hadir",
+			not_attending: "Tidak Hadir"
+		};
+		const statusTone = {
+			pending: "neutral",
+			attending: "success",
+			not_attending: "danger"
+		};
+		if (guests.length === 0) {
+			$$renderer.push("<!--[0-->");
+			EmptyState($$renderer, {
+				icon: "👥",
+				title: "Belum ada tamu",
+				description: "Tambah tamu satu per satu atau import dari CSV."
+			});
+		} else {
+			$$renderer.push(`<!--[-1--><div class="overflow-x-auto rounded-xl border border-navy-100"><table class="w-full min-w-[560px] text-sm"><thead class="bg-navy-50 text-left text-navy-500"><tr><th class="px-4 py-3 font-medium">Nama</th><th class="px-4 py-3 font-medium">Grup</th><th class="px-4 py-3 font-medium">Status</th><th class="px-4 py-3 font-medium">Pax</th><th class="px-4 py-3 font-medium"><span class="sr-only">Aksi</span></th></tr></thead><tbody class="divide-y divide-navy-100"><!--[-->`);
+			const each_array = ensure_array_like(guests);
+			for (let $$index = 0, $$length = each_array.length; $$index < $$length; $$index++) {
+				let guest = each_array[$$index];
+				$$renderer.push(`<tr><td class="px-4 py-3 font-medium text-navy-900">${escape_html(guest.name)}</td><td class="px-4 py-3 text-navy-500">${escape_html(guest.guestGroup ?? "–")}</td><td class="px-4 py-3">`);
+				Badge($$renderer, {
+					tone: statusTone[guest.rsvpStatus],
+					children: ($$renderer) => {
+						$$renderer.push(`<!---->${escape_html(statusLabel[guest.rsvpStatus])}`);
+					},
+					$$slots: { default: true }
+				});
+				$$renderer.push(`<!----></td><td class="px-4 py-3 text-navy-500">${escape_html(guest.pax)}</td><td class="px-4 py-3 text-right whitespace-nowrap"><button type="button" class="text-navy-400 hover:text-navy-700">Ubah</button> <button type="button" class="ml-3 text-navy-400 hover:text-red-600">Hapus</button></td></tr>`);
+			}
+			$$renderer.push(`<!--]--></tbody></table></div>`);
+		}
+		$$renderer.push(`<!--]-->`);
+	});
+}
+//#endregion
+//#region src/lib/components/domain/ImageGallery.svelte
+function ImageGallery($$renderer, $$props) {
+	$$renderer.component(($$renderer) => {
+		let { images, alt = "Galeri foto" } = $$props;
+		if (images.length > 0) {
+			$$renderer.push(`<!--[0--><div class="grid grid-cols-2 gap-2 sm:grid-cols-3"><!--[-->`);
+			const each_array = ensure_array_like(images);
+			for (let index = 0, $$length = each_array.length; index < $$length; index++) {
+				let src = each_array[index];
+				$$renderer.push(`<button type="button" class="aspect-square overflow-hidden rounded-lg"><img${attr("src", src)} loading="lazy"${attr("alt", `${stringify(alt)} ${stringify(index + 1)}`)} class="h-full w-full object-cover transition-transform hover:scale-105"/></button>`);
+			}
+			$$renderer.push(`<!--]--></div> `);
+			$$renderer.push("<!--[-1-->");
+			$$renderer.push(`<!--]-->`);
+		} else $$renderer.push("<!--[-1-->");
+		$$renderer.push(`<!--]-->`);
+	});
+}
+//#endregion
+//#region src/lib/utils/ics.ts
+function toIcsDate(iso) {
+	return `${new Date(iso).toISOString().replace(/[-:]/g, "").split(".")[0]}Z`;
+}
+function escapeIcsText(text) {
+	return text.replace(/[\\;,]/g, (match) => `\\${match}`).replace(/\n/g, "\\n");
+}
+/** Generate isi file .ics minimal (VCALENDAR/VEVENT) untuk tombol "Tambah ke Kalender". */
+function generateIcs(input) {
+	const start = toIcsDate(input.start);
+	const end = toIcsDate(input.end ?? input.start);
+	return [
+		"BEGIN:VCALENDAR",
+		"VERSION:2.0",
+		"PRODID:-//Ketuk.id//Undangan//ID",
+		"BEGIN:VEVENT",
+		`UID:${crypto.randomUUID()}@ketuk.id`,
+		`DTSTAMP:${toIcsDate((/* @__PURE__ */ new Date()).toISOString())}`,
+		`DTSTART:${start}`,
+		`DTEND:${end}`,
+		`SUMMARY:${escapeIcsText(input.title)}`,
+		input.description ? `DESCRIPTION:${escapeIcsText(input.description)}` : void 0,
+		input.location ? `LOCATION:${escapeIcsText(input.location)}` : void 0,
+		"END:VEVENT",
+		"END:VCALENDAR"
+	].filter((line) => line !== void 0).join("\r\n");
+}
+function downloadIcsFile(filename, content) {
+	const blob = new Blob([content], { type: "text/calendar;charset=utf-8" });
+	const url = URL.createObjectURL(blob);
+	const link = document.createElement("a");
+	link.href = url;
+	link.download = filename;
+	link.click();
+	URL.revokeObjectURL(url);
+}
+//#endregion
+//#region src/lib/components/domain/RsvpForm.svelte
+function RsvpForm($$renderer, $$props) {
+	$$renderer.component(($$renderer) => {
+		let { eventSlug, guestSlug, defaultName = "" } = $$props;
+		let name = defaultName;
+		let message = "";
+		let submitting = false;
+		let $$settled = true;
+		let $$inner_renderer;
+		function $$render_inner($$renderer) {
+			$$renderer.push(`<!--[-1--><form class="flex flex-col gap-4">`);
+			Input($$renderer, {
+				label: "Nama kamu",
+				required: true,
+				placeholder: "Nama lengkap",
+				get value() {
+					return name;
+				},
+				set value($$value) {
+					name = $$value;
+					$$settled = false;
+				}
+			});
+			$$renderer.push(`<!----> <div class="flex flex-col gap-1.5"><span class="text-sm font-medium text-white">Konfirmasi kehadiran</span> <div class="flex gap-3"><button type="button"${attr_class(`flex-1 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors border-white/20 text-white hover:border-white/40`)}>Hadir</button> <button type="button"${attr_class(`flex-1 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors border-white/20 text-white hover:border-white/40`)}>Tidak Bisa Hadir</button></div></div> `);
+			$$renderer.push("<!--[-1-->");
+			$$renderer.push(`<!--]--> `);
+			Textarea($$renderer, {
+				label: "Pesan (opsional)",
+				rows: 3,
+				maxlength: 500,
+				get value() {
+					return message;
+				},
+				set value($$value) {
+					message = $$value;
+					$$settled = false;
+				}
+			});
+			$$renderer.push(`<!----> `);
+			$$renderer.push("<!--[-1-->");
+			$$renderer.push(`<!--]--> `);
+			Button($$renderer, {
+				type: "submit",
+				loading: submitting,
+				fullWidth: true,
+				children: ($$renderer) => {
+					$$renderer.push(`<!---->Kirim RSVP`);
+				},
+				$$slots: { default: true }
+			});
+			$$renderer.push(`<!----></form>`);
+			$$renderer.push(`<!--]-->`);
+		}
+		do {
+			$$settled = true;
+			$$inner_renderer = $$renderer.copy();
+			$$render_inner($$inner_renderer);
+		} while (!$$settled);
+		$$renderer.subsume($$inner_renderer);
+	});
+}
+//#endregion
+//#region src/lib/components/domain/WishForm.svelte
+function WishForm($$renderer, $$props) {
+	$$renderer.component(($$renderer) => {
+		let { eventSlug, guestSlug, onSent } = $$props;
+		let name = "";
+		let message = "";
+		let submitting = false;
+		let $$settled = true;
+		let $$inner_renderer;
+		function $$render_inner($$renderer) {
+			$$renderer.push(`<form class="flex flex-col gap-3">`);
+			Input($$renderer, {
+				label: "Nama",
+				placeholder: "Nama kamu",
+				required: true,
+				get value() {
+					return name;
+				},
+				set value($$value) {
+					name = $$value;
+					$$settled = false;
+				}
+			});
+			$$renderer.push(`<!----> `);
+			Textarea($$renderer, {
+				label: "Ucapan",
+				rows: 3,
+				maxlength: 500,
+				required: true,
+				get value() {
+					return message;
+				},
+				set value($$value) {
+					message = $$value;
+					$$settled = false;
+				}
+			});
+			$$renderer.push(`<!----> `);
+			$$renderer.push("<!--[-1-->");
+			$$renderer.push(`<!--]--> `);
+			Button($$renderer, {
+				type: "submit",
+				loading: submitting,
+				children: ($$renderer) => {
+					$$renderer.push(`<!---->Kirim Ucapan`);
+				},
+				$$slots: { default: true }
+			});
+			$$renderer.push(`<!----></form>`);
+		}
+		do {
+			$$settled = true;
+			$$inner_renderer = $$renderer.copy();
+			$$render_inner($$inner_renderer);
+		} while (!$$settled);
+		$$renderer.subsume($$inner_renderer);
+	});
+}
+//#endregion
+//#region src/lib/components/domain/WishList.svelte
+function WishList($$renderer, $$props) {
+	$$renderer.component(($$renderer) => {
+		let { wishes, loading = false } = $$props;
+		if (loading) {
+			$$renderer.push(`<!--[0--><div class="flex flex-col gap-3"><!--[-->`);
+			const each_array = ensure_array_like(Array(3));
+			for (let $$index = 0, $$length = each_array.length; $$index < $$length; $$index++) {
+				each_array[$$index];
+				Skeleton($$renderer, { height: "4rem" });
+			}
+			$$renderer.push(`<!--]--></div>`);
+		} else if (wishes.length === 0) $$renderer.push(`<!--[1--><p class="text-center text-sm text-white/60">Belum ada ucapan. Jadilah yang pertama mengirim.</p>`);
+		else {
+			$$renderer.push(`<!--[-1--><ul class="flex flex-col gap-3"><!--[-->`);
+			const each_array_1 = ensure_array_like(wishes);
+			for (let $$index_1 = 0, $$length = each_array_1.length; $$index_1 < $$length; $$index_1++) {
+				let wish = each_array_1[$$index_1];
+				$$renderer.push(`<li class="rounded-xl border border-white/10 bg-white/5 p-4"><p class="font-medium text-white">${escape_html(wish.name)}</p> <p class="mt-1 text-sm text-white/80">${escape_html(wish.message)}</p></li>`);
+			}
+			$$renderer.push(`<!--]--></ul>`);
+		}
+		$$renderer.push(`<!--]-->`);
+	});
+}
+//#endregion
+//#region src/lib/components/domain/InvitationView.svelte
+function InvitationView($$renderer, $$props) {
+	$$renderer.component(($$renderer) => {
+		let { event, giftProducts = [], guestSlug, guestName } = $$props;
+		const invitation = derived(() => event.invitation);
+		const isWeddingLike = derived(() => event.type === "wedding" || event.type === "engagement");
+		const config = derived(() => EVENT_TYPE_CONFIGS.find((c) => c.value === event.type));
+		const displayNames = derived(() => {
+			if (invitation()) {
+				if (isWeddingLike() && "groomName" in invitation() && invitation().groomName && invitation().brideName) return `${invitation().brideName} & ${invitation().groomName}`;
+				if ("hostName" in invitation() && invitation().hostName) return invitation().hostName;
+			}
+			return event.title;
+		});
+		const bankAccount = derived(() => {
+			const raw = invitation()?.customData?.["bankAccount"];
+			if (raw && typeof raw === "object" && "bank" in raw && "accountNumber" in raw && "accountName" in raw) return raw;
+			return null;
+		});
+		let coverOpen = true;
+		let audioEl = null;
+		function openInvitation() {
+			coverOpen = false;
+			if (invitation()?.musicUrl && audioEl);
+		}
+		function handleAddToCalendar() {
+			if (!event.date) return;
+			const start = event.timeStart ? `${event.date}T${event.timeStart}:00` : `${event.date}T00:00:00`;
+			const ics = generateIcs({
+				title: event.title,
+				location: event.venue ?? event.location ?? void 0,
+				start
+			});
+			downloadIcsFile(`${event.slug}.ics`, ics);
+		}
+		let wishes = [];
+		let wishesLoading = true;
+		async function loadWishes() {
+			wishesLoading = true;
+			try {
+				wishes = await listWishes(event.slug);
+			} catch {
+				wishes = [];
+			} finally {
+				wishesLoading = false;
+			}
+		}
+		function handleWishSent() {
+			loadWishes();
+		}
+		let orderModalProduct = null;
+		let orderResult = null;
+		let senderName = "";
+		let senderPhone = "";
+		let recipientName = displayNames();
+		let recipientAddress = event.venue ?? event.location ?? "";
+		let quantity = "1";
+		let orderMessage = "";
+		let paymentMethod = "";
+		let ordering = false;
+		let orderError = "";
+		const paymentMethodOptions = PAYMENT_METHODS.map((m) => ({
+			value: m.code,
+			label: m.label
+		}));
+		function openOrderModal(product) {
+			orderModalProduct = product;
+			orderResult = null;
+			orderError = "";
+		}
+		let $$settled = true;
+		let $$inner_renderer;
+		function $$render_inner($$renderer) {
+			if (invitation()?.musicUrl) $$renderer.push(`<!--[0--><audio${attr("src", invitation().musicUrl)} loop=""></audio>`);
+			else $$renderer.push("<!--[-1-->");
+			$$renderer.push(`<!--]--> `);
+			if (coverOpen) {
+				$$renderer.push(`<!--[0--><div class="fixed inset-0 z-50 flex flex-col items-center justify-center gap-6 bg-navy-900 px-6 text-center text-white"><p class="text-sm text-white/60">${escape_html(config()?.emoji ?? "✨")} ${escape_html(config()?.label ?? "")}</p> <h1 class="font-display text-3xl font-bold sm:text-4xl">${escape_html(displayNames())}</h1> `);
+				if (event.date) $$renderer.push(`<!--[0--><p class="text-white/70">${escape_html(formatEventDate(event.date))}</p>`);
+				else $$renderer.push("<!--[-1-->");
+				$$renderer.push(`<!--]--> `);
+				if (guestName) $$renderer.push(`<!--[0--><p class="mt-4 text-sm text-white/60">Kepada Yth.</p> <p class="font-display text-xl font-semibold">${escape_html(guestName)}</p>`);
+				else $$renderer.push("<!--[-1-->");
+				$$renderer.push(`<!--]--> `);
+				Button($$renderer, {
+					size: "lg",
+					onclick: openInvitation,
+					children: ($$renderer) => {
+						$$renderer.push(`<!---->Buka Undangan`);
+					},
+					$$slots: { default: true }
+				});
+				$$renderer.push(`<!----></div>`);
+			} else {
+				$$renderer.push(`<!--[-1--><div class="bg-navy-900 text-white">`);
+				if (invitation()?.musicUrl) $$renderer.push(`<!--[0--><button type="button" class="fixed top-4 right-4 z-40 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 backdrop-blur"${attr("aria-label", "Putar musik")}>${escape_html("🔇")}</button>`);
+				else $$renderer.push("<!--[-1-->");
+				$$renderer.push(`<!--]--> <section class="flex flex-col items-center justify-center gap-3 px-6 py-24 text-center"><p class="text-sm text-white/60">${escape_html(config()?.emoji ?? "✨")} ${escape_html(config()?.label ?? "")}</p> <h1 class="font-display text-4xl font-bold sm:text-5xl">${escape_html(displayNames())}</h1> `);
+				if (event.date) $$renderer.push(`<!--[0--><p class="text-lg text-white/70">${escape_html(formatEventDate(event.date))}</p>`);
+				else $$renderer.push("<!--[-1-->");
+				$$renderer.push(`<!--]--></section> `);
+				if (invitation()) {
+					$$renderer.push(`<!--[0--><section class="px-6 py-16"><div class="mx-auto max-w-xl text-center">`);
+					if (isWeddingLike() && "groomName" in invitation()) {
+						$$renderer.push(`<!--[0--><div class="grid gap-8 sm:grid-cols-2"><div><h2 class="font-display text-2xl font-semibold">${escape_html(invitation().brideName)}</h2> `);
+						if (invitation().brideParents) $$renderer.push(`<!--[0--><p class="mt-1 text-sm text-white/60">Putri dari ${escape_html(invitation().brideParents)}</p>`);
+						else $$renderer.push("<!--[-1-->");
+						$$renderer.push(`<!--]--></div> <div><h2 class="font-display text-2xl font-semibold">${escape_html(invitation().groomName)}</h2> `);
+						if (invitation().groomParents) $$renderer.push(`<!--[0--><p class="mt-1 text-sm text-white/60">Putra dari ${escape_html(invitation().groomParents)}</p>`);
+						else $$renderer.push("<!--[-1-->");
+						$$renderer.push(`<!--]--></div></div>`);
+					} else if ("hostName" in invitation() && invitation().hostName) $$renderer.push(`<!--[1--><h2 class="font-display text-2xl font-semibold">${escape_html(invitation().hostName)}</h2>`);
+					else $$renderer.push("<!--[-1-->");
+					$$renderer.push(`<!--]--> `);
+					if (invitation().openingText) $$renderer.push(`<!--[0--><p class="mt-8 text-white/80">${escape_html(invitation().openingText)}</p>`);
+					else $$renderer.push("<!--[-1-->");
+					$$renderer.push(`<!--]--></div></section>`);
+				} else $$renderer.push("<!--[-1-->");
+				$$renderer.push(`<!--]--> <section class="bg-white/5 px-6 py-16"><div class="mx-auto flex max-w-md flex-col items-center gap-4 text-center"><h2 class="font-display text-2xl font-semibold">Waktu &amp; Tempat</h2> `);
+				if (event.date) $$renderer.push(`<!--[0--><p>${escape_html(formatEventDate(event.date))}</p>`);
+				else $$renderer.push("<!--[-1-->");
+				$$renderer.push(`<!--]--> `);
+				if (event.timeStart) $$renderer.push(`<!--[0--><p class="text-white/70">${escape_html(formatEventTime(event.timeStart))}${escape_html(event.timeEnd ? ` – ${formatEventTime(event.timeEnd)}` : "")}</p>`);
+				else $$renderer.push("<!--[-1-->");
+				$$renderer.push(`<!--]--> `);
+				if (event.venue) $$renderer.push(`<!--[0--><p class="font-medium">${escape_html(event.venue)}</p>`);
+				else $$renderer.push("<!--[-1-->");
+				$$renderer.push(`<!--]--> `);
+				if (event.location) $$renderer.push(`<!--[0--><p class="text-sm text-white/70">${escape_html(event.location)}</p>`);
+				else $$renderer.push("<!--[-1-->");
+				$$renderer.push(`<!--]--> <div class="mt-2 flex flex-wrap justify-center gap-3">`);
+				if (event.locationUrl) {
+					$$renderer.push("<!--[0-->");
+					Button($$renderer, {
+						href: event.locationUrl,
+						variant: "secondary",
+						children: ($$renderer) => {
+							$$renderer.push(`<!---->Buka Google Maps`);
+						},
+						$$slots: { default: true }
+					});
+				} else $$renderer.push("<!--[-1-->");
+				$$renderer.push(`<!--]--> `);
+				if (event.date) {
+					$$renderer.push("<!--[0-->");
+					Button($$renderer, {
+						variant: "ghost",
+						onclick: handleAddToCalendar,
+						children: ($$renderer) => {
+							$$renderer.push(`<!---->Tambah ke Kalender`);
+						},
+						$$slots: { default: true }
+					});
+				} else $$renderer.push("<!--[-1-->");
+				$$renderer.push(`<!--]--></div></div></section> `);
+				if (event.date) {
+					$$renderer.push(`<!--[0--><section class="px-6 py-16 text-center"><h2 class="font-display text-xl font-semibold text-white/80">Menuju Hari Bahagia</h2> <div class="mt-6">`);
+					CountdownTimer($$renderer, { date: event.timeStart ? `${event.date}T${event.timeStart}:00` : event.date });
+					$$renderer.push(`<!----></div></section>`);
+				} else $$renderer.push("<!--[-1-->");
+				$$renderer.push(`<!--]--> `);
+				if (invitation() && invitation().gallery.length > 0) {
+					$$renderer.push(`<!--[0--><section class="bg-white/5 px-6 py-16"><div class="mx-auto max-w-3xl"><h2 class="mb-6 text-center font-display text-2xl font-semibold">Galeri</h2> `);
+					ImageGallery($$renderer, {
+						images: invitation().gallery,
+						alt: displayNames()
+					});
+					$$renderer.push(`<!----></div></section>`);
+				} else $$renderer.push("<!--[-1-->");
+				$$renderer.push(`<!--]--> `);
+				if (isWeddingLike() && invitation()?.loveStory && invitation().loveStory.length > 0) {
+					$$renderer.push(`<!--[0--><section class="px-6 py-16"><div class="mx-auto flex max-w-xl flex-col gap-8"><h2 class="text-center font-display text-2xl font-semibold">Kisah Kami</h2> <!--[-->`);
+					const each_array = ensure_array_like(invitation().loveStory);
+					for (let $$index = 0, $$length = each_array.length; $$index < $$length; $$index++) {
+						let chapter = each_array[$$index];
+						$$renderer.push(`<div><h3 class="font-display font-semibold text-coral-300">${escape_html(chapter.title)}</h3> <p class="mt-1 text-white/80">${escape_html(chapter.description)}</p></div>`);
+					}
+					$$renderer.push(`<!--]--></div></section>`);
+				} else $$renderer.push("<!--[-1-->");
+				$$renderer.push(`<!--]--> <section class="bg-white/5 px-6 py-16"><div class="mx-auto max-w-md"><h2 class="mb-6 text-center font-display text-2xl font-semibold">RSVP</h2> `);
+				if (guestSlug) {
+					$$renderer.push("<!--[0-->");
+					RsvpForm($$renderer, {
+						eventSlug: event.slug,
+						guestSlug,
+						defaultName: guestName ?? ""
+					});
+				} else $$renderer.push(`<!--[-1--><p class="text-center text-sm text-white/70">RSVP dilakukan lewat link undangan personal yang dikirim host — cek pesan undangan yang kamu
+						terima.</p>`);
+				$$renderer.push(`<!--]--></div></section> <section class="px-6 py-16"><div class="mx-auto max-w-md"><h2 class="mb-6 text-center font-display text-2xl font-semibold">Ucapan</h2> `);
+				WishForm($$renderer, {
+					eventSlug: event.slug,
+					guestSlug,
+					onSent: handleWishSent
+				});
+				$$renderer.push(`<!----> <div class="mt-8">`);
+				WishList($$renderer, {
+					wishes,
+					loading: wishesLoading
+				});
+				$$renderer.push(`<!----></div></div></section> <section class="bg-white/5 px-6 py-16"><div class="mx-auto max-w-2xl"><h2 class="mb-6 text-center font-display text-2xl font-semibold">Kirim Hadiah</h2> `);
+				if (bankAccount()) $$renderer.push(`<!--[0--><div class="mb-8 rounded-xl border border-white/10 p-5 text-center"><p class="text-sm text-white/60">Amplop Digital</p> <p class="mt-1 font-medium">${escape_html(bankAccount().bank)} — ${escape_html(bankAccount().accountName)}</p> <div class="mt-2 flex items-center justify-center gap-2"><span class="font-mono text-lg">${escape_html(bankAccount().accountNumber)}</span> <button type="button" class="rounded-lg bg-white/10 px-3 py-1 text-xs hover:bg-white/20">${escape_html("Salin")}</button></div></div>`);
+				else $$renderer.push("<!--[-1-->");
+				$$renderer.push(`<!--]--> `);
+				if (giftProducts.length > 0) {
+					$$renderer.push(`<!--[0--><div class="grid gap-4 sm:grid-cols-2"><!--[-->`);
+					const each_array_1 = ensure_array_like(giftProducts);
+					for (let $$index_1 = 0, $$length = each_array_1.length; $$index_1 < $$length; $$index_1++) {
+						let product = each_array_1[$$index_1];
+						$$renderer.push(`<div class="rounded-xl border border-white/10 p-4"><p class="font-medium">${escape_html(product.name)}</p> <p class="mt-1 text-sm text-white/70">${escape_html(formatRupiah(product.price))}</p> `);
+						Button($$renderer, {
+							size: "sm",
+							onclick: () => openOrderModal(product),
+							children: ($$renderer) => {
+								$$renderer.push(`<!---->Kirim Ini`);
+							},
+							$$slots: { default: true }
+						});
+						$$renderer.push(`<!----></div>`);
+					}
+					$$renderer.push(`<!--]--></div>`);
+				} else $$renderer.push("<!--[-1-->");
+				$$renderer.push(`<!--]--></div></section> <footer class="px-6 py-10 text-center text-xs text-white/40">Dibuat dengan <a href="https://ketuk.id" class="underline">Ketuk.id</a></footer></div>`);
+			}
+			$$renderer.push(`<!--]--> `);
+			Modal($$renderer, {
+				open: orderModalProduct !== null,
+				title: orderModalProduct?.name,
+				onclose: () => orderModalProduct = null,
+				children: ($$renderer) => {
+					if (orderResult) {
+						$$renderer.push(`<!--[0--><div class="flex flex-col gap-3 text-center"><p class="font-medium text-navy-900">Pesanan dibuat! Selesaikan pembayaran:</p> `);
+						if (orderResult.paymentUrl) {
+							$$renderer.push("<!--[0-->");
+							Button($$renderer, {
+								href: orderResult.paymentUrl,
+								children: ($$renderer) => {
+									$$renderer.push(`<!---->Bayar Sekarang`);
+								},
+								$$slots: { default: true }
+							});
+						} else if (orderResult.vaNumber) $$renderer.push(`<!--[1--><p class="text-sm text-navy-500">Nomor Virtual Account</p> <p class="font-mono text-xl text-navy-900">${escape_html(orderResult.vaNumber)}</p>`);
+						else if (orderResult.qrString) $$renderer.push(`<!--[2--><p class="text-sm text-navy-500">Scan QRIS di aplikasi pembayaranmu.</p>`);
+						else $$renderer.push("<!--[-1-->");
+						$$renderer.push(`<!--]--></div>`);
+					} else {
+						$$renderer.push(`<!--[-1--><form class="flex flex-col gap-4">`);
+						Input($$renderer, {
+							label: "Nama kamu",
+							required: true,
+							get value() {
+								return senderName;
+							},
+							set value($$value) {
+								senderName = $$value;
+								$$settled = false;
+							}
+						});
+						$$renderer.push(`<!----> `);
+						Input($$renderer, {
+							label: "Nomor HP",
+							placeholder: "08xxxxxxxxxx",
+							required: true,
+							get value() {
+								return senderPhone;
+							},
+							set value($$value) {
+								senderPhone = $$value;
+								$$settled = false;
+							}
+						});
+						$$renderer.push(`<!----> `);
+						Input($$renderer, {
+							label: "Nama penerima",
+							required: true,
+							get value() {
+								return recipientName;
+							},
+							set value($$value) {
+								recipientName = $$value;
+								$$settled = false;
+							}
+						});
+						$$renderer.push(`<!----> `);
+						Textarea($$renderer, {
+							label: "Alamat pengiriman",
+							rows: 2,
+							required: true,
+							get value() {
+								return recipientAddress;
+							},
+							set value($$value) {
+								recipientAddress = $$value;
+								$$settled = false;
+							}
+						});
+						$$renderer.push(`<!----> `);
+						Input($$renderer, {
+							label: "Jumlah",
+							type: "number",
+							get value() {
+								return quantity;
+							},
+							set value($$value) {
+								quantity = $$value;
+								$$settled = false;
+							}
+						});
+						$$renderer.push(`<!----> `);
+						Textarea($$renderer, {
+							label: "Pesan (opsional)",
+							rows: 2,
+							get value() {
+								return orderMessage;
+							},
+							set value($$value) {
+								orderMessage = $$value;
+								$$settled = false;
+							}
+						});
+						$$renderer.push(`<!----> `);
+						Select($$renderer, {
+							label: "Metode pembayaran",
+							options: paymentMethodOptions,
+							required: true,
+							get value() {
+								return paymentMethod;
+							},
+							set value($$value) {
+								paymentMethod = $$value;
+								$$settled = false;
+							}
+						});
+						$$renderer.push(`<!----> `);
+						if (orderError) $$renderer.push(`<!--[0--><p class="text-sm text-red-600">${escape_html(orderError)}</p>`);
+						else $$renderer.push("<!--[-1-->");
+						$$renderer.push(`<!--]--> `);
+						Button($$renderer, {
+							type: "submit",
+							loading: ordering,
+							children: ($$renderer) => {
+								$$renderer.push(`<!---->Buat Pesanan`);
+							},
+							$$slots: { default: true }
+						});
+						$$renderer.push(`<!----></form>`);
+					}
+					$$renderer.push(`<!--]-->`);
+				},
+				$$slots: { default: true }
+			});
+			$$renderer.push(`<!---->`);
+		}
+		do {
+			$$settled = true;
+			$$inner_renderer = $$renderer.copy();
+			$$render_inner($$inner_renderer);
+		} while (!$$settled);
+		$$renderer.subsume($$inner_renderer);
+	});
+}
+//#endregion
+//#region src/lib/components/domain/PlanCard.svelte
+function PlanCard($$renderer, $$props) {
+	$$renderer.component(($$renderer) => {
+		let { plan, highlighted = false } = $$props;
+		$$renderer.push(`<div${attr_class(`flex flex-col gap-6 rounded-2xl border p-8 ${highlighted ? "border-coral-500 bg-navy-900 text-white shadow-xl" : "border-navy-100 bg-white"}`)}><div><h3 class="font-display text-xl font-bold">${escape_html(plan.name)}</h3> <p${attr_class(`mt-1 text-sm ${highlighted ? "text-white/70" : "text-navy-500"}`)}>${escape_html(plan.description)}</p></div> <p class="font-display text-3xl font-bold">${escape_html(plan.price === 0 ? "Gratis" : formatRupiah(plan.price))} `);
+		if (plan.price > 0) $$renderer.push(`<!--[0--><span${attr_class(`text-sm font-normal ${highlighted ? "text-white/60" : "text-navy-400"}`)}>/acara</span>`);
+		else $$renderer.push("<!--[-1-->");
+		$$renderer.push(`<!--]--></p> <ul class="flex flex-1 flex-col gap-2.5 text-sm"><!--[-->`);
+		const each_array = ensure_array_like(plan.features);
+		for (let $$index = 0, $$length = each_array.length; $$index < $$length; $$index++) {
+			let feature = each_array[$$index];
+			$$renderer.push(`<li${attr_class(`flex items-center gap-2 ${feature.included ? "" : highlighted ? "text-white/40" : "text-navy-300"}`)}><span aria-hidden="true">${escape_html(feature.included ? "✓" : "–")}</span> ${escape_html(feature.label)}</li>`);
+		}
+		$$renderer.push(`<!--]--></ul> `);
+		Button($$renderer, {
+			variant: highlighted ? "primary" : "secondary",
+			href: "/daftar",
+			fullWidth: true,
+			children: ($$renderer) => {
+				$$renderer.push(`<!---->${escape_html(plan.price === 0 ? "Mulai Gratis" : "Pilih Paket")}`);
+			},
+			$$slots: { default: true }
+		});
+		$$renderer.push(`<!----></div>`);
+	});
+}
+//#endregion
+//#region src/lib/components/domain/VendorCard.svelte
+function VendorCard($$renderer, $$props) {
+	$$renderer.component(($$renderer) => {
+		let { vendor } = $$props;
+		const config = derived(() => VENDOR_CATEGORY_CONFIGS.find((c) => c.value === vendor.category));
+		$$renderer.push(`<a${attr("href", `/vendor/${stringify(vendor.slug)}`)} class="flex flex-col gap-3 rounded-xl border border-navy-100 bg-white p-5 transition-shadow hover:shadow-md"><div class="flex items-start justify-between gap-2"><div><p class="text-2xl" aria-hidden="true">${escape_html(config()?.emoji ?? "🏷️")}</p> <h3 class="mt-1 font-display text-lg font-semibold text-navy-900">${escape_html(vendor.name)}</h3> <p class="text-sm text-navy-500">${escape_html(config()?.label ?? vendor.category)} · ${escape_html(vendor.city ?? "Lokasi belum diatur")}</p></div> `);
+		if (vendor.isVerified) {
+			$$renderer.push("<!--[0-->");
+			Badge($$renderer, {
+				tone: "vendor",
+				children: ($$renderer) => {
+					$$renderer.push(`<!---->Terverifikasi`);
+				},
+				$$slots: { default: true }
+			});
+		} else $$renderer.push("<!--[-1-->");
+		$$renderer.push(`<!--]--></div> <p class="text-sm text-navy-700">${escape_html(formatRupiah(vendor.priceMin))} – ${escape_html(formatRupiah(vendor.priceMax))}</p> <p class="text-xs text-navy-400">⭐ ${escape_html(vendor.rating.toFixed(1))} (${escape_html(vendor.reviewCount)} ulasan)</p></a>`);
+	});
+}
+//#endregion
+export { EventCard as a, GuestTable as i, PlanCard as n, ChecklistList as o, InvitationView as r, BudgetTable as s, VendorCard as t };

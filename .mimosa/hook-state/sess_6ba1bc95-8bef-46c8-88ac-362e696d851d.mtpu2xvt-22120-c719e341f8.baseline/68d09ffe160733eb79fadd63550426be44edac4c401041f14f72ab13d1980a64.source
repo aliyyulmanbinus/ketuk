@@ -1,0 +1,176 @@
+import { c as store_get, i as derived, u as unsubscribe_stores, w as escape_html } from "../../../../../../chunks/server.js";
+import { a as Input, i as Modal, s as Button, t as Textarea } from "../../../../../../chunks/Textarea.js";
+import "../../../../../../chunks/ui.js";
+import { t as confirmDialog } from "../../../../../../chunks/confirm.svelte.js";
+import { n as pushToast } from "../../../../../../chunks/toast.svelte.js";
+import { t as invalidateAll } from "../../../../../../chunks/client.js";
+import { t as page } from "../../../../../../chunks/stores.js";
+import "../../../../../../chunks/navigation.js";
+import { u as deleteGuest } from "../../../../../../chunks/api.js";
+import { i as GuestTable } from "../../../../../../chunks/domain.js";
+//#region src/routes/(app)/undangan/[id]/tamu/+page.svelte
+function _page($$renderer, $$props) {
+	$$renderer.component(($$renderer) => {
+		var $$store_subs;
+		let { data } = $$props;
+		let addOpen = false;
+		let importOpen = false;
+		let name = "";
+		let phone = "";
+		let guestGroup = "";
+		let csvText = "";
+		let submitting = false;
+		const eventId = derived(() => store_get($$store_subs ??= {}, "$page", page).params.id ?? "");
+		const statTotals = derived(() => data.stats.reduce((acc, row) => {
+			acc.total += row.guestCount;
+			if (row.status === "attending") acc.attending = row.guestCount;
+			if (row.status === "not_attending") acc.notAttending = row.guestCount;
+			return acc;
+		}, {
+			total: 0,
+			attending: 0,
+			notAttending: 0
+		}));
+		async function handleDelete(guest) {
+			if (!await confirmDialog({
+				title: "Hapus tamu?",
+				message: `${guest.name} akan dihapus dari daftar tamu.`,
+				danger: true
+			})) return;
+			try {
+				await deleteGuest(eventId(), guest.id, { accessToken: store_get($$store_subs ??= {}, "$page", page).data.accessToken });
+				pushToast("Tamu dihapus.", "success");
+				await invalidateAll();
+			} catch {
+				pushToast("Gagal menghapus tamu.", "error");
+			}
+		}
+		let $$settled = true;
+		let $$inner_renderer;
+		function $$render_inner($$renderer) {
+			$$renderer.push(`<div class="flex flex-wrap items-center justify-between gap-3"><div class="flex gap-6 text-sm"><div><p class="text-navy-400">Total Tamu</p> <p class="font-display text-xl font-bold text-navy-900">${escape_html(statTotals().total)}</p></div> <div><p class="text-navy-400">Hadir</p> <p class="font-display text-xl font-bold text-vendor-600">${escape_html(statTotals().attending)}</p></div> <div><p class="text-navy-400">Tidak Hadir</p> <p class="font-display text-xl font-bold text-red-500">${escape_html(statTotals().notAttending)}</p></div></div> <div class="flex gap-2">`);
+			Button($$renderer, {
+				variant: "ghost",
+				onclick: () => importOpen = true,
+				children: ($$renderer) => {
+					$$renderer.push(`<!---->Import CSV`);
+				},
+				$$slots: { default: true }
+			});
+			$$renderer.push(`<!----> `);
+			Button($$renderer, {
+				onclick: () => addOpen = true,
+				children: ($$renderer) => {
+					$$renderer.push(`<!---->Tambah Tamu`);
+				},
+				$$slots: { default: true }
+			});
+			$$renderer.push(`<!----></div></div> <div class="mt-6">`);
+			if (data.error) $$renderer.push(`<!--[0--><p class="rounded-lg bg-red-50 p-4 text-sm text-red-600">${escape_html(data.error)}</p>`);
+			else {
+				$$renderer.push("<!--[-1-->");
+				GuestTable($$renderer, {
+					guests: data.guests,
+					onDelete: handleDelete
+				});
+			}
+			$$renderer.push(`<!--]--></div> `);
+			Modal($$renderer, {
+				open: addOpen,
+				title: "Tambah Tamu",
+				onclose: () => addOpen = false,
+				children: ($$renderer) => {
+					$$renderer.push(`<form class="flex flex-col gap-4">`);
+					Input($$renderer, {
+						label: "Nama",
+						required: true,
+						get value() {
+							return name;
+						},
+						set value($$value) {
+							name = $$value;
+							$$settled = false;
+						}
+					});
+					$$renderer.push(`<!----> `);
+					Input($$renderer, {
+						label: "Nomor HP (opsional)",
+						get value() {
+							return phone;
+						},
+						set value($$value) {
+							phone = $$value;
+							$$settled = false;
+						}
+					});
+					$$renderer.push(`<!----> `);
+					Input($$renderer, {
+						label: "Grup (opsional)",
+						placeholder: "Keluarga Mempelai Pria",
+						get value() {
+							return guestGroup;
+						},
+						set value($$value) {
+							guestGroup = $$value;
+							$$settled = false;
+						}
+					});
+					$$renderer.push(`<!----> `);
+					Button($$renderer, {
+						type: "submit",
+						loading: submitting,
+						children: ($$renderer) => {
+							$$renderer.push(`<!---->Tambah`);
+						},
+						$$slots: { default: true }
+					});
+					$$renderer.push(`<!----></form>`);
+				},
+				$$slots: { default: true }
+			});
+			$$renderer.push(`<!----> `);
+			Modal($$renderer, {
+				open: importOpen,
+				title: "Import Tamu dari CSV",
+				onclose: () => importOpen = false,
+				children: ($$renderer) => {
+					$$renderer.push(`<form class="flex flex-col gap-4">`);
+					Textarea($$renderer, {
+						label: "Isi CSV",
+						rows: 8,
+						hint: "Baris pertama header: name,phone,guestGroup",
+						required: true,
+						get value() {
+							return csvText;
+						},
+						set value($$value) {
+							csvText = $$value;
+							$$settled = false;
+						}
+					});
+					$$renderer.push(`<!----> `);
+					Button($$renderer, {
+						type: "submit",
+						loading: submitting,
+						children: ($$renderer) => {
+							$$renderer.push(`<!---->Import`);
+						},
+						$$slots: { default: true }
+					});
+					$$renderer.push(`<!----></form>`);
+				},
+				$$slots: { default: true }
+			});
+			$$renderer.push(`<!---->`);
+		}
+		do {
+			$$settled = true;
+			$$inner_renderer = $$renderer.copy();
+			$$render_inner($$inner_renderer);
+		} while (!$$settled);
+		$$renderer.subsume($$inner_renderer);
+		if ($$store_subs) unsubscribe_stores($$store_subs);
+	});
+}
+//#endregion
+export { _page as default };
