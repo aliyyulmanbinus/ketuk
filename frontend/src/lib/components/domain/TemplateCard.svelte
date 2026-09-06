@@ -147,9 +147,11 @@
 	<div class="mt-4 flex flex-1 flex-col justify-between">
 		<div>
 			<div class="flex items-center justify-between">
-				<h4 class="font-serif text-xl sm:text-2xl font-semibold text-espresso-900 transition-colors group-hover:text-wine-800">
-					{template.title}
-				</h4>
+				<a href="/template/{template.slug}" class="focus:outline-none">
+					<h4 class="font-serif text-xl sm:text-2xl font-semibold text-espresso-950 transition-colors group-hover:text-wine-800">
+						{template.title}
+					</h4>
+				</a>
 			</div>
 			<p class="mt-1 text-xs text-espresso-600 line-clamp-2 leading-relaxed">
 				{template.subtitle}
@@ -164,14 +166,13 @@
 				</span>
 			</div>
 
-			<button
-				type="button"
+			<a
+				href="/template/{template.slug}"
 				class="inline-flex items-center gap-1 text-xs font-semibold text-wine-800 transition-all group-hover:translate-x-0.5 group-hover:text-wine-900"
-				onclick={() => onPreview?.(template)}
 			>
 				<span>Lihat Desain</span>
 				<ArrowRight size={13} />
-			</button>
+			</a>
 		</div>
 	</div>
 </div>

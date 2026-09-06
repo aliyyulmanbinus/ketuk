@@ -1,6 +1,8 @@
 export { default as BudgetTable } from './BudgetTable.svelte';
 export { default as ChecklistList } from './ChecklistList.svelte';
 export { default as CountdownTimer } from './CountdownTimer.svelte';
+export { default as EnvelopeCard } from './EnvelopeCard.svelte';
+export { default as EnvelopeModal } from './EnvelopeModal.svelte';
 export { default as EventCard } from './EventCard.svelte';
 export { default as GiftCard } from './GiftCard.svelte';
 export { default as GuestTable } from './GuestTable.svelte';
