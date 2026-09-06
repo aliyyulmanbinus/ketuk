@@ -4,6 +4,8 @@
 	import { downloadIcsFile, generateIcs } from '$lib/utils/ics';
 	import { EVENT_TYPE_CONFIGS, formatEventDate, formatEventTime, formatRupiah, PAYMENT_METHODS } from '@ketuk/shared';
 	import type { GiftProduct } from '@ketuk/shared';
+	import { getEventIcon } from '$lib/icons';
+	import { Volume2, VolumeX } from '@lucide/svelte';
 	import Button from '../ui/Button.svelte';
 	import Input from '../ui/Input.svelte';
 	import Modal from '../ui/Modal.svelte';
@@ -34,6 +36,7 @@
 	const invitation = $derived(event.invitation);
 	const isWeddingLike = $derived(event.type === 'wedding' || event.type === 'engagement');
 	const config = $derived(EVENT_TYPE_CONFIGS.find((c) => c.value === event.type));
+	const EventIcon = $derived(getEventIcon(event.type));
 
 	const displayNames = $derived.by(() => {
 		if (invitation) {
@@ -192,7 +195,10 @@
 
 {#if coverOpen}
 	<div class="fixed inset-0 z-50 flex flex-col items-center justify-center gap-6 bg-navy-900 px-6 text-center text-white">
-		<p class="text-sm text-white/60">{config?.emoji ?? '✨'} {config?.label ?? ''}</p>
+		<p class="inline-flex items-center gap-2 text-sm text-white/60">
+			<EventIcon size={16} />
+			{config?.label ?? ''}
+		</p>
 		<h1 class="font-display text-3xl font-bold sm:text-4xl">{displayNames}</h1>
 		{#if event.date}
 			<p class="text-white/70">{formatEventDate(event.date)}</p>
@@ -213,13 +219,20 @@
 				class="fixed top-4 right-4 z-40 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 backdrop-blur"
 				aria-label={musicPlaying ? 'Matikan musik' : 'Putar musik'}
 			>
-				{musicPlaying ? '🔊' : '🔇'}
+				{#if musicPlaying}
+					<Volume2 size={18} />
+				{:else}
+					<VolumeX size={18} />
+				{/if}
 			</button>
 		{/if}
 
 		<!-- Hero -->
 		<section class="flex flex-col items-center justify-center gap-3 px-6 py-24 text-center">
-			<p class="text-sm text-white/60">{config?.emoji ?? '✨'} {config?.label ?? ''}</p>
+			<p class="inline-flex items-center gap-2 text-sm text-white/60">
+				<EventIcon size={16} />
+				{config?.label ?? ''}
+			</p>
 			<h1 class="font-display text-4xl font-bold sm:text-5xl">{displayNames}</h1>
 			{#if event.date}
 				<p class="text-lg text-white/70">{formatEventDate(event.date)}</p>
@@ -327,7 +340,7 @@
 					<RsvpForm eventSlug={event.slug} {guestSlug} defaultName={guestName ?? ''} />
 				{:else}
 					<p class="text-center text-sm text-white/70">
-						RSVP dilakukan lewat link undangan personal yang dikirim host — cek pesan undangan yang kamu
+						RSVP dilakukan lewat link undangan personal yang dikirim host. Cek pesan undangan yang kamu
 						terima.
 					</p>
 				{/if}
@@ -353,7 +366,7 @@
 				{#if bankAccount}
 					<div class="mb-8 rounded-xl border border-white/10 p-5 text-center">
 						<p class="text-sm text-white/60">Amplop Digital</p>
-						<p class="mt-1 font-medium">{bankAccount.bank} — {bankAccount.accountName}</p>
+						<p class="mt-1 font-medium">{bankAccount.bank} · {bankAccount.accountName}</p>
 						<div class="mt-2 flex items-center justify-center gap-2">
 							<span class="font-mono text-lg">{bankAccount.accountNumber}</span>
 							<button

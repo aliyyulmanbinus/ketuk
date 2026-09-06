@@ -10,7 +10,7 @@
 </script>
 
 <svelte:head>
-	<title>{data.event.title} — Ketuk.id</title>
+	<title>{data.event.title} | Ketuk.id</title>
 	<meta property="og:title" content={data.event.title} />
 	<meta
 		property="og:description"

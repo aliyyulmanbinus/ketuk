@@ -2,7 +2,7 @@
 	import type { Snippet } from 'svelte';
 
 	interface Props {
-		variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
+		variant?: 'primary' | 'secondary' | 'ghost' | 'outline' | 'danger';
 		size?: 'sm' | 'md' | 'lg';
 		type?: 'button' | 'submit' | 'reset';
 		href?: string;
@@ -33,8 +33,9 @@
 
 	const variantClasses: Record<NonNullable<Props['variant']>, string> = {
 		primary: 'bg-coral-500 text-white hover:bg-coral-600',
-		secondary: 'bg-navy-900 text-white hover:bg-navy-800',
+		secondary: 'bg-white border border-navy-200 text-navy-900 hover:bg-navy-50',
 		ghost: 'bg-transparent text-navy-900 hover:bg-navy-100',
+		outline: 'bg-white/10 border border-white/25 text-white hover:bg-white/15 backdrop-blur',
 		danger: 'bg-red-600 text-white hover:bg-red-700',
 	};
 

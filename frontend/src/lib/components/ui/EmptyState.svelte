@@ -1,24 +1,31 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
+	import { Inbox, type Icon as IconType } from '@lucide/svelte';
+	import type { Snippet, Component } from 'svelte';
 
 	interface Props {
-		icon?: string;
+		icon?: Component;
 		title: string;
 		description?: string;
 		action?: Snippet;
 	}
 
-	let { icon = '📭', title, description, action }: Props = $props();
+	let { icon, title, description, action }: Props = $props();
+
+	const Icon = $derived(icon ?? Inbox);
 </script>
 
 <div
-	class="flex flex-col items-center gap-3 rounded-xl border border-dashed border-navy-200 px-6 py-12 text-center"
+	class="flex flex-col items-center gap-4 rounded-xl border border-dashed border-navy-200 bg-white px-6 py-12 text-center"
 >
-	<span class="text-4xl" aria-hidden="true">{icon}</span>
-	<p class="font-display text-lg font-semibold text-navy-900">{title}</p>
-	{#if description}
-		<p class="max-w-sm text-sm text-navy-500">{description}</p>
-	{/if}
+	<span class="inline-flex h-14 w-14 items-center justify-center rounded-full bg-navy-50">
+		<Icon size={26} class="text-navy-400" />
+	</span>
+	<div class="flex flex-col gap-1.5">
+		<p class="font-display text-lg font-semibold text-navy-900">{title}</p>
+		{#if description}
+			<p class="max-w-sm text-sm text-navy-500">{description}</p>
+		{/if}
+	</div>
 	{#if action}
 		<div class="mt-2">{@render action()}</div>
 	{/if}

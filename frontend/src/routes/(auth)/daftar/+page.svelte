@@ -41,7 +41,7 @@
 </script>
 
 <svelte:head>
-	<title>Daftar — Ketuk.id</title>
+	<title>Daftar | Ketuk.id</title>
 </svelte:head>
 
 <h1 class="font-display text-xl font-semibold text-navy-900 sm:text-2xl">Mulai gratis</h1>

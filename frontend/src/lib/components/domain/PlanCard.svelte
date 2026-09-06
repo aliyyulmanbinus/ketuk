@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Plan } from '@ketuk/shared';
 	import { formatRupiah } from '@ketuk/shared';
+	import { Check, Minus } from '@lucide/svelte';
 	import Button from '../ui/Button.svelte';
 
 	interface Props {
@@ -12,7 +13,7 @@
 </script>
 
 <div
-	class="flex flex-col gap-6 rounded-2xl border p-8
+	class="flex flex-col gap-6 rounded-2xl border p-6 sm:p-8
 		{highlighted ? 'border-coral-500 bg-navy-900 text-white shadow-xl' : 'border-navy-100 bg-white'}"
 >
 	<div>
@@ -27,8 +28,20 @@
 	</p>
 	<ul class="flex flex-1 flex-col gap-2.5 text-sm">
 		{#each plan.features as feature (feature.label)}
-			<li class="flex items-center gap-2 {feature.included ? '' : highlighted ? 'text-white/40' : 'text-navy-300'}">
-				<span aria-hidden="true">{feature.included ? '✓' : '–'}</span>
+			<li
+				class="flex items-start gap-2 {feature.included
+					? ''
+					: highlighted
+						? 'text-white/40'
+						: 'text-navy-300'}"
+			>
+				<span class="mt-0.5 shrink-0" aria-hidden="true">
+					{#if feature.included}
+						<Check size={16} class={highlighted ? 'text-coral-400' : 'text-vendor-600'} />
+					{:else}
+						<Minus size={16} />
+					{/if}
+				</span>
 				{feature.label}
 			</li>
 		{/each}

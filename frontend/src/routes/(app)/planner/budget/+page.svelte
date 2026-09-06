@@ -7,6 +7,7 @@
 	import { confirmDialog } from '$lib/stores/confirm.svelte';
 	import { pushToast } from '$lib/stores/toast.svelte';
 	import type { BudgetItem } from '@ketuk/shared';
+	import { ArrowLeft, Plus } from '@lucide/svelte';
 	import type { PageData } from './$types';
 
 	interface Props {
@@ -85,17 +86,25 @@
 </script>
 
 <svelte:head>
-	<title>Budget — Ketuk.id</title>
+	<title>Budget | Ketuk.id</title>
 </svelte:head>
 
-<div class="flex items-center justify-between">
+<div class="mx-auto max-w-5xl">
+<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 	<div>
-		<h1 class="font-display text-2xl font-bold text-navy-900">Budget</h1>
-		<a href="/planner?event={data.eventId}" class="text-sm text-navy-400 hover:text-navy-700">
-			← Kembali ke Planner
+		<a
+			href="/planner?event={data.eventId}"
+			class="inline-flex items-center gap-1.5 text-sm text-navy-500 hover:text-navy-900"
+		>
+			<ArrowLeft size={14} />
+			Kembali ke Planner
 		</a>
+		<h1 class="mt-1 font-display text-2xl font-bold text-navy-900 sm:text-3xl">Budget</h1>
 	</div>
-	<Button onclick={openCreate}>Tambah Item</Button>
+	<Button onclick={openCreate}>
+		<Plus size={16} />
+		Tambah Item
+	</Button>
 </div>
 
 <div class="mt-6">
@@ -121,3 +130,4 @@
 		<Button type="submit" loading={submitting}>Simpan</Button>
 	</form>
 </Modal>
+</div>

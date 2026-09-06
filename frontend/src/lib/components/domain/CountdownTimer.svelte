@@ -26,7 +26,7 @@
 </script>
 
 {#if countdown.isPast}
-	<p class="text-center text-lg font-medium text-white">Acara sudah berlangsung 🎉</p>
+	<p class="text-center text-lg font-medium text-white">Acara sudah berlangsung</p>
 {:else}
 	<div class="flex justify-center gap-3 sm:gap-6">
 		{#each units as unit (unit.label)}

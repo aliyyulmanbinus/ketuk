@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { dismissToast, getToasts } from '$lib/stores/toast.svelte';
+	import { X, CheckCircle2, AlertCircle, Info } from '@lucide/svelte';
 
 	const toasts = $derived(getToasts());
 
@@ -7,6 +8,12 @@
 		success: 'bg-vendor-600',
 		error: 'bg-red-600',
 		info: 'bg-navy-900',
+	} as const;
+
+	const toneIcons = {
+		success: CheckCircle2,
+		error: AlertCircle,
+		info: Info,
 	} as const;
 </script>
 
@@ -18,14 +25,16 @@
 			]}"
 			role="status"
 		>
+			{@const Icon = toneIcons[toast.type]}
+			<Icon size={16} class="shrink-0" />
 			<span>{toast.message}</span>
 			<button
 				type="button"
 				onclick={() => dismissToast(toast.id)}
-				class="text-white/70 hover:text-white"
+				class="inline-flex h-5 w-5 items-center justify-center text-white/70 hover:text-white"
 				aria-label="Tutup notifikasi"
 			>
-				✕
+				<X size={14} />
 			</button>
 		</div>
 	{/each}

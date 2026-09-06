@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Guest } from '@ketuk/shared';
+	import { Users } from '@lucide/svelte';
 	import Badge from '../ui/Badge.svelte';
 	import EmptyState from '../ui/EmptyState.svelte';
 
@@ -26,7 +27,7 @@
 
 {#if guests.length === 0}
 	<EmptyState
-		icon="👥"
+		icon={Users}
 		title="Belum ada tamu"
 		description="Tambah tamu satu per satu atau import dari CSV."
 	/>

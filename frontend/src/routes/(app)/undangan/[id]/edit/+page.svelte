@@ -89,7 +89,7 @@
 </script>
 
 <svelte:head>
-	<title>Edit {data.event.title} — Ketuk.id</title>
+	<title>Edit {data.event.title} | Ketuk.id</title>
 </svelte:head>
 
 <div class="flex flex-col gap-8">

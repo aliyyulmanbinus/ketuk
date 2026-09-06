@@ -16,7 +16,7 @@
 
 	const typeOptions: SelectOption[] = EVENT_TYPE_CONFIGS.map((c) => ({
 		value: c.value,
-		label: `${c.emoji} ${c.label}`,
+		label: c.label,
 	}));
 
 	$effect(() => {
@@ -47,13 +47,14 @@
 </script>
 
 <svelte:head>
-	<title>Buat Undangan — Ketuk.id</title>
+	<title>Buat Undangan | Ketuk.id</title>
 </svelte:head>
 
-<h1 class="font-display text-2xl font-bold text-navy-900">Buat undangan baru</h1>
-<p class="mt-1 text-navy-500">Isi info dasar dulu — tanggal, lokasi, dan detail lain bisa dilengkapi setelahnya.</p>
+<div class="mx-auto max-w-2xl">
+<h1 class="font-display text-2xl font-bold text-navy-900 sm:text-3xl">Buat undangan baru</h1>
+<p class="mt-1.5 text-navy-500">Isi info dasar dulu. Tanggal, lokasi, dan detail lain bisa dilengkapi setelahnya.</p>
 
-<form class="mt-8 flex max-w-lg flex-col gap-5" onsubmit={handleSubmit}>
+<form class="mt-8 flex flex-col gap-5" onsubmit={handleSubmit}>
 	<Select label="Jenis acara" bind:value={type} options={typeOptions} required />
 	<Input label="Judul acara" bind:value={title} placeholder="Pernikahan Budi & Sinta" required />
 	<Input
@@ -68,3 +69,4 @@
 	{/if}
 	<Button type="submit" loading={submitting}>Buat Undangan</Button>
 </form>
+</div>

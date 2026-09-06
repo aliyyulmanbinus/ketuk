@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { BudgetItem } from '@ketuk/shared';
 	import { formatRupiah } from '@ketuk/shared';
+	import { Wallet } from '@lucide/svelte';
 	import Badge from '../ui/Badge.svelte';
 	import EmptyState from '../ui/EmptyState.svelte';
 
@@ -14,7 +15,7 @@
 </script>
 
 {#if items.length === 0}
-	<EmptyState icon="💰" title="Belum ada rencana anggaran" description="Tambah item budget pertamamu." />
+	<EmptyState icon={Wallet} title="Belum ada rencana anggaran" description="Tambah item budget pertamamu." />
 {:else}
 	<div class="overflow-x-auto rounded-xl border border-navy-100">
 		<table class="w-full min-w-[600px] text-sm">

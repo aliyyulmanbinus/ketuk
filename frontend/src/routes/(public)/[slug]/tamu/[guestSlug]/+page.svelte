@@ -10,7 +10,7 @@
 </script>
 
 <svelte:head>
-	<title>{data.event.title} — Ketuk.id</title>
+	<title>{data.event.title} | Ketuk.id</title>
 	<meta property="og:title" content="Undangan untuk {data.guestName}" />
 	<meta
 		property="og:description"

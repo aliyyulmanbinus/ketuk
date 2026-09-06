@@ -2,6 +2,7 @@
 	import { page } from '$app/stores';
 	import { Tabs } from '$lib/components/ui';
 	import type { TabItem } from '$lib/components/ui';
+	import { ArrowLeft } from '@lucide/svelte';
 	import type { Snippet } from 'svelte';
 	import type { LayoutData } from './$types';
 
@@ -27,13 +28,23 @@
 	);
 </script>
 
-<div class="mb-6">
-	<a href="/undangan" class="text-sm text-navy-400 hover:text-navy-700">← Semua Undangan</a>
-	<h1 class="mt-1 font-display text-2xl font-bold text-navy-900">{data.event.title}</h1>
-</div>
+<div class="mx-auto max-w-6xl">
+	<div class="mb-6">
+		<a
+			href="/undangan"
+			class="inline-flex items-center gap-1.5 text-sm text-navy-500 hover:text-navy-900"
+		>
+			<ArrowLeft size={14} />
+			Semua Undangan
+		</a>
+		<h1 class="mt-1 font-display text-2xl font-bold text-navy-900 sm:text-3xl">
+			{data.event.title}
+		</h1>
+	</div>
 
-<Tabs {tabs} {active} />
+	<Tabs {tabs} {active} />
 
-<div class="mt-6">
-	{@render children()}
+	<div class="mt-6">
+		{@render children()}
+	</div>
 </div>

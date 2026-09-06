@@ -2,6 +2,7 @@
 	import { EventCard } from '$lib/components/domain';
 	import { Button, EmptyState } from '$lib/components/ui';
 	import { formatRupiah } from '@ketuk/shared';
+	import { ClipboardList, ArrowRight, Wallet, ListChecks, Clock } from '@lucide/svelte';
 	import type { PageData } from './$types';
 
 	interface Props {
@@ -14,73 +15,97 @@
 </script>
 
 <svelte:head>
-	<title>Planner — Ketuk.id</title>
+	<title>Planner | Ketuk.id</title>
 </svelte:head>
 
-{#if !data.eventId}
-	<h1 class="font-display text-2xl font-bold text-navy-900">Planner</h1>
-	<p class="mt-1 text-navy-500">Pilih acara yang mau dikelola.</p>
-	{#if data.events.length === 0}
-		<div class="mt-8">
-			<EmptyState
-				icon="📋"
-				title="Belum ada undangan"
-				description="Buat undangan dulu sebelum mengatur planner."
-			>
-				{#snippet action()}
-					<Button href="/undangan/baru">Buat Undangan</Button>
-				{/snippet}
-			</EmptyState>
-		</div>
+<div class="mx-auto max-w-5xl">
+	{#if !data.eventId}
+		<h1 class="font-display text-2xl font-bold text-navy-900 sm:text-3xl">Planner</h1>
+		<p class="mt-1.5 text-navy-500">Pilih acara yang mau dikelola.</p>
+		{#if data.events.length === 0}
+			<div class="mt-8">
+				<EmptyState
+					icon={ClipboardList}
+					title="Belum ada undangan"
+					description="Buat undangan dulu sebelum mengatur planner."
+				>
+					{#snippet action()}
+						<Button href="/undangan/baru">Buat Undangan</Button>
+					{/snippet}
+				</EmptyState>
+			</div>
+		{:else}
+			<div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+				{#each data.events as event (event.id)}
+					<a href="/planner?event={event.id}" class="block">
+						<EventCard {event} />
+					</a>
+				{/each}
+			</div>
+		{/if}
 	{:else}
-		<div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-			{#each data.events as event (event.id)}
-				<a href="/planner?event={event.id}" class="block">
-					<EventCard {event} />
-				</a>
-			{/each}
+		<div class="flex flex-col gap-1">
+			<a href="/planner" class="text-sm text-navy-500 hover:text-navy-900">
+				<span class="inline-flex items-center gap-1.5">Ganti acara</span>
+			</a>
+			<h1 class="font-display text-2xl font-bold text-navy-900 sm:text-3xl">
+				Planner: {currentEvent?.title ?? ''}
+			</h1>
 		</div>
-	{/if}
-{:else}
-	<div class="flex items-center justify-between">
-		<div>
-			<h1 class="font-display text-2xl font-bold text-navy-900">Planner — {currentEvent?.title ?? ''}</h1>
-			<a href="/planner" class="text-sm text-navy-400 hover:text-navy-700">Ganti acara</a>
-		</div>
-	</div>
 
-	{#if data.error}
-		<p class="mt-6 rounded-lg bg-red-50 p-4 text-sm text-red-600">{data.error}</p>
-	{:else if data.summary}
-		<div class="mt-6 grid gap-4 sm:grid-cols-2">
-			<a
-				href="/planner/budget?event={data.eventId}"
-				class="rounded-xl border border-navy-100 bg-white p-6 transition-shadow hover:shadow-md"
-			>
-				<p class="text-sm text-navy-400">Budget</p>
-				<p class="mt-1 font-display text-2xl font-bold text-navy-900">
-					{formatRupiah(data.summary.budget.totalActual)}
-				</p>
-				<p class="text-sm text-navy-500">dari estimasi {formatRupiah(data.summary.budget.totalEstimated)}</p>
-			</a>
-			<a
-				href="/planner/checklist?event={data.eventId}"
-				class="rounded-xl border border-navy-100 bg-white p-6 transition-shadow hover:shadow-md"
-			>
-				<p class="text-sm text-navy-400">Checklist</p>
-				<p class="mt-1 font-display text-2xl font-bold text-navy-900">
-					{data.summary.checklist.done}/{data.summary.checklist.total}
-				</p>
-				<p class="text-sm text-navy-500">item selesai</p>
-			</a>
-		</div>
-		<div class="mt-4">
-			<a
-				href="/planner/timeline?event={data.eventId}"
-				class="block rounded-xl border border-navy-100 bg-white p-6 transition-shadow hover:shadow-md"
-			>
-				<p class="font-display font-semibold text-navy-900">Timeline / Rundown Acara →</p>
-			</a>
-		</div>
+		{#if data.error}
+			<p class="mt-6 rounded-lg bg-red-50 p-4 text-sm text-red-600">{data.error}</p>
+		{:else if data.summary}
+			<div class="mt-6 grid gap-4 sm:grid-cols-2">
+				<a
+					href="/planner/budget?event={data.eventId}"
+					class="group flex flex-col gap-3 rounded-2xl border border-navy-100 bg-white p-6 transition-all hover:-translate-y-0.5 hover:border-navy-200 hover:shadow-md"
+				>
+					<span class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-planner-100">
+						<Wallet size={18} class="text-planner-600" />
+					</span>
+					<div>
+						<p class="text-sm text-navy-500">Budget</p>
+						<p class="mt-0.5 font-display text-2xl font-bold text-navy-900">
+							{formatRupiah(data.summary.budget.totalActual)}
+						</p>
+						<p class="text-sm text-navy-500">
+							dari estimasi {formatRupiah(data.summary.budget.totalEstimated)}
+						</p>
+					</div>
+				</a>
+				<a
+					href="/planner/checklist?event={data.eventId}"
+					class="group flex flex-col gap-3 rounded-2xl border border-navy-100 bg-white p-6 transition-all hover:-translate-y-0.5 hover:border-navy-200 hover:shadow-md"
+				>
+					<span class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-vendor-100">
+						<ListChecks size={18} class="text-vendor-600" />
+					</span>
+					<div>
+						<p class="text-sm text-navy-500">Checklist</p>
+						<p class="mt-0.5 font-display text-2xl font-bold text-navy-900">
+							{data.summary.checklist.done}/{data.summary.checklist.total}
+						</p>
+						<p class="text-sm text-navy-500">item selesai</p>
+					</div>
+				</a>
+			</div>
+			<div class="mt-4">
+				<a
+					href="/planner/timeline?event={data.eventId}"
+					class="group flex items-center justify-between gap-4 rounded-2xl border border-navy-100 bg-white p-6 transition-all hover:-translate-y-0.5 hover:border-navy-200 hover:shadow-md"
+				>
+					<div class="flex items-center gap-3">
+						<span
+							class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-undangan-100"
+						>
+							<Clock size={18} class="text-undangan-600" />
+						</span>
+						<p class="font-display font-semibold text-navy-900">Timeline / Rundown Acara</p>
+					</div>
+					<ArrowRight size={18} class="text-navy-400 transition-transform group-hover:translate-x-0.5" />
+				</a>
+			</div>
+		{/if}
 	{/if}
-{/if}
+</div>

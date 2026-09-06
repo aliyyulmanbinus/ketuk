@@ -2,25 +2,8 @@
 	import { EVENT_TYPE_CONFIGS, PLANS } from '@ketuk/shared';
 	import { PlanCard } from '$lib/components/domain';
 	import { Button } from '$lib/components/ui';
-	import {
-		Mail,
-		ClipboardList,
-		Store,
-		Gift,
-		ArrowRight,
-		Users,
-		PartyPopper,
-		Heart,
-		Flower2,
-		Cake,
-		Building2,
-		HandHeart,
-		GraduationCap,
-		Sparkles,
-		type Icon as IconType,
-	} from '@lucide/svelte';
-
-	type Component = typeof IconType;
+	import { Mail, ClipboardList, Store, Gift, ArrowRight, Users, PartyPopper } from '@lucide/svelte';
+	import { getEventIcon, type IconComponent as Component } from '$lib/icons';
 
 	const modules: {
 		icon: Component;
@@ -64,29 +47,17 @@
 		},
 	];
 
-	const eventIconMap: Record<string, Component> = {
-		wedding: Heart,
-		engagement: Flower2,
-		birthday: Cake,
-		khitanan: Sparkles,
-		aqiqah: Sparkles,
-		reunion: PartyPopper,
-		corporate: Building2,
-		syukuran: HandHeart,
-		graduation: GraduationCap,
-	};
-
 	const eventTypesToShow = EVENT_TYPE_CONFIGS.filter((c) => c.value !== 'other').map((c) => ({
 		...c,
-		Icon: eventIconMap[c.value] ?? Sparkles,
+		Icon: getEventIcon(c.value),
 	}));
 </script>
 
 <svelte:head>
-	<title>Ketuk.id — Satu Tempat untuk Segala Urusan Acara</title>
+	<title>Ketuk.id -Satu Tempat untuk Segala Urusan Acara</title>
 	<meta
 		name="description"
-		content="Undangan digital, planner acara, marketplace vendor, dan kirim hadiah — semua dalam satu platform. Untuk pernikahan, ulang tahun, khitanan, dan acara apa pun."
+		content="Undangan digital, planner acara, marketplace vendor, dan kirim hadiah dalam satu platform. Untuk pernikahan, ulang tahun, khitanan, dan acara apa pun."
 	/>
 </svelte:head>
 
@@ -97,21 +68,21 @@
 	></div>
 	<div class="relative mx-auto max-w-4xl px-4 text-center sm:px-6">
 		<span
-			class="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-white/80 backdrop-blur"
+			class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-white/80 backdrop-blur"
 		>
-			<Sparkles size={12} class="text-coral-400" />
-			Baru — platform terpadu acara Indonesia
+			<span class="h-1.5 w-1.5 rounded-full bg-coral-400"></span>
+			Platform terpadu acara Indonesia
 		</span>
 		<h1 class="mt-6 font-display text-3xl leading-tight font-bold sm:text-5xl lg:text-6xl">
 			Satu tempat untuk <span class="text-coral-500">segala urusan acara</span>
 		</h1>
 		<p class="mx-auto mt-5 max-w-2xl text-base text-white/70 sm:text-lg">
-			Dari pernikahan sampai syukuran kantor — Ketuk bantu kamu bikin undangan, atur budget, cari
+			Dari pernikahan sampai syukuran kantor, Ketuk bantu kamu bikin undangan, atur budget, cari
 			vendor, dan terima hadiah. Bukan cuma soal nikahan.
 		</p>
 		<div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row sm:flex-wrap">
 			<Button href="/daftar" size="lg">Mulai Gratis</Button>
-			<Button href="/template" variant="ghost" size="lg">Lihat Template</Button>
+			<Button href="/template" variant="outline" size="lg">Lihat Template</Button>
 		</div>
 		<div class="mt-12 flex flex-wrap justify-center gap-2 text-sm text-white/60">
 			{#each eventTypesToShow as type (type.value)}
@@ -132,7 +103,7 @@
 		<div class="max-w-2xl">
 			<h2 class="font-display text-2xl font-bold text-navy-900 sm:text-3xl">Mau melakukan apa?</h2>
 			<p class="mt-3 text-navy-500">
-				Empat modul yang bisa dipakai terpisah — beli sesuai kebutuhan, bukan paket lengkap.
+				Empat modul yang bisa dipakai terpisah. Beli sesuai kebutuhan, bukan paket lengkap.
 			</p>
 		</div>
 		<div class="mt-10 grid gap-4 sm:mt-12 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4">
@@ -169,7 +140,7 @@
 				Bukan cuma untuk penyelenggara
 			</h2>
 			<p class="mt-3 text-navy-500">
-				Kebanyakan platform undangan cuma mikirin host. Ketuk melayani dua sisi sekaligus — orang
+				Kebanyakan platform undangan cuma mikirin host. Ketuk melayani dua sisi sekaligus: orang
 				yang bikin acara, dan orang yang diundang.
 			</p>
 		</div>
@@ -196,7 +167,7 @@
 				</span>
 				<h3 class="mt-4 font-display text-xl font-semibold text-navy-900">Untuk Tamu</h3>
 				<p class="mt-2 text-sm text-navy-500">
-					RSVP, kirim ucapan, dan kirim hadiah langsung dari link undangan — tanpa perlu daftar
+					RSVP, kirim ucapan, dan kirim hadiah langsung dari link undangan, tanpa perlu daftar
 					akun sama sekali.
 				</p>
 			</div>
@@ -212,7 +183,7 @@
 				Untuk acara apa saja
 			</h2>
 			<p class="mt-3 text-navy-500">
-				Bukan cuma pernikahan — Ketuk dipakai untuk segala jenis acara yang orang Indonesia rayakan.
+				Bukan cuma pernikahan. Ketuk dipakai untuk segala jenis acara yang orang Indonesia rayakan.
 			</p>
 		</div>
 		<div class="mt-10 grid gap-3 sm:mt-12 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">

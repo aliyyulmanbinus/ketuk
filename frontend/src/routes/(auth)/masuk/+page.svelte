@@ -42,7 +42,7 @@
 </script>
 
 <svelte:head>
-	<title>Masuk — Ketuk.id</title>
+	<title>Masuk | Ketuk.id</title>
 </svelte:head>
 
 <h1 class="font-display text-xl font-semibold text-navy-900 sm:text-2xl">Masuk ke Ketuk.id</h1>

@@ -29,7 +29,7 @@
 			pushToast('Undangan dipublikasikan.', 'success');
 			await invalidateAll();
 		} catch {
-			pushToast('Gagal publikasikan — lengkapi tanggal dan lokasi/venue dulu.', 'error');
+			pushToast('Gagal publikasikan. Lengkapi tanggal dan lokasi/venue dulu.', 'error');
 		} finally {
 			publishing = false;
 		}
@@ -37,7 +37,7 @@
 </script>
 
 <svelte:head>
-	<title>{data.event.title} — Ketuk.id</title>
+	<title>{data.event.title} | Ketuk.id</title>
 </svelte:head>
 
 <div class="grid gap-6 lg:grid-cols-3">

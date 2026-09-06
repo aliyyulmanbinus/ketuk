@@ -45,7 +45,7 @@
 </script>
 
 <svelte:head>
-	<title>Dashboard — Ketuk.id</title>
+	<title>Dashboard | Ketuk.id</title>
 </svelte:head>
 
 <div class="mx-auto max-w-6xl">
